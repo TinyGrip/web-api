@@ -218,6 +218,7 @@
     <Compile Include="Controllers\Area\AreasController.cs" />
     <Compile Include="Controllers\PagingController.cs" />
     <Compile Include="Controllers\RootController.cs" />
+    <Compile Include="Controllers\WallsController.cs" />
     <Compile Include="Helpers\UrlHelper.cs" />
     <Compile Include="IoC\Installers\ControllersInstaller.cs" />
     <Compile Include="IoC\Installers\ServicesInstaller.cs" />
@@ -230,6 +231,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Mapping\AreaMapService.cs" />
+    <Compile Include="Mapping\WallMapService.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

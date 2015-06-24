@@ -75,6 +75,10 @@
     <Compile Include="Migrations\201506211115382_AreaDescription.Designer.cs">
       <DependentUpon>201506211115382_AreaDescription.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201506211357353_WallName.cs" />
+    <Compile Include="Migrations\201506211357353_WallName.Designer.cs">
+      <DependentUpon>201506211357353_WallName.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -100,6 +104,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201506211115382_AreaDescription.resx">
       <DependentUpon>201506211115382_AreaDescription.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201506211357353_WallName.resx">
+      <DependentUpon>201506211357353_WallName.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

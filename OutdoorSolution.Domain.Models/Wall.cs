@@ -14,6 +14,9 @@ namespace OutdoorSolution.Domain.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
+        [MaxLength(128)]
+        public string Name { get; set; }
+
         [MaxLength(512)]
         public string Image { get; set; }
 

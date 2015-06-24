@@ -43,7 +43,7 @@ namespace OutdoorSolution.Controllers
         }
 
         [ResponseType(typeof(Page<AreaDto>))]
-        public override async Task<IHttpActionResult> Get([FromUri]PagingParams param)
+        public async Task<IHttpActionResult> Get([FromUri]PagingParams param)
         {// TODO: check if to use eager loading!
             var areas = await db.Areas.OrderByDescending(a => a.Name)
                                       .Skip(param.Skip)

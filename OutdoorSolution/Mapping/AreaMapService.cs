@@ -9,6 +9,7 @@ using System.Web.Http.Routing;
 using OutdoorSolution.Helpers;
 using OutdoorSolution.Controllers;
 using System.Data.Entity.Spatial;
+using OutdoorSolution.Services.Common;
 
 namespace OutdoorSolution.Mapping
 {
@@ -33,23 +34,16 @@ namespace OutdoorSolution.Mapping
             {
                 areaDto.Self = urlHelper.Link<AreasController>(c => c.GetById(area.Id));
                 // TODO: add this when controllers available
-                areaDto.Walls = null;
+                areaDto.Walls = urlHelper.Link<WallsController>(w => w.Get(area.Id, null));
             }
 
-            if (area.Location != null)
+            if (area.Location != null && area.Location.Longitude.HasValue && area.Location.Latitude.HasValue)
             {
-                try
+                areaDto.Location = new GeographyDto()
                 {
-                    areaDto.Location = new GeographyDto()
-                    {
-                        Longitude = area.Location.Longitude.Value,
-                        Latitude = area.Location.Latitude.Value
-                    };
-                }
-                catch (Exception)
-                {
-                    areaDto.Location = null;
-                }
+                    Longitude = area.Location.Longitude.Value,
+                    Latitude = area.Location.Latitude.Value
+                };
             }
 
             return areaDto;
@@ -77,8 +71,7 @@ namespace OutdoorSolution.Mapping
         {
             area.Name = areaDto.Name;
             area.Created = areaDto.Created;
-            var wellKnownText = String.Format("POINT ({0} {1})", areaDto.Location.Latitude, areaDto.Location.Longitude);
-            area.Location = DbGeography.FromText(wellKnownText);
+            area.Location = Utils.CreateDbPoint(areaDto.Location);
             area.Description = areaDto.Description;
         }
 
