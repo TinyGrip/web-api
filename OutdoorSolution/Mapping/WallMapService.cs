@@ -5,26 +5,32 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Http.Routing;
+using OutdoorSolution.Helpers;
+using OutdoorSolution.Controllers;
 
 namespace OutdoorSolution.Mapping
 {
     public class WallMapService
     {
-        public WallDto CreateWallDto(Wall wall)
+        public WallDto CreateWallDto(Wall wall, UrlHelper urlHelper)
         {
             var wallDto = new WallDto()
             {
                 Name = wall.Name,
-                Image = wall.Image
+                Image = new Link()
+                {
+                    Href = new Uri(wall.Image),
+                    Templated = false
+                },
+                Location = Utils.CreateGeoDto(wall.Location)
             };
 
-            if (wall.Location != null && wall.Location.Longitude.HasValue && wall.Location.Latitude.HasValue)
+            if (urlHelper != null)
             {
-                wallDto.Location = new GeographyDto()
-                {
-                    Longitude = wall.Location.Longitude.Value,
-                    Latitude = wall.Location.Latitude.Value
-                };
+                wallDto.Self = urlHelper.Link<WallsController>(c => c.GetById(wall.Id));
+                wallDto.Area = urlHelper.Link<AreasController>(c => c.GetById(wall.AreaId));
+                //wallDto.Routes = urlHelper.Link<RouteController>(c => c.Get(wall.Id, null));
             }
 
             return wallDto;
@@ -35,7 +41,7 @@ namespace OutdoorSolution.Mapping
             var wall = new Wall()
             {
                 Name = wallDto.Name,
-                Image = wallDto.Image,
+                Image = wallDto.ImageHref,
                 Location = Utils.CreateDbPoint(wallDto.Location)
             };
 

@@ -15,5 +15,19 @@ namespace OutdoorSolution.Services.Common
             var wellKnownText = String.Format("POINT ({0} {1})", geoDto.Latitude, geoDto.Longitude);
             return DbGeography.FromText(wellKnownText);
         }
+
+        public static GeographyDto CreateGeoDto(DbGeography dbGeo)
+        {
+            if (dbGeo != null && dbGeo.Longitude.HasValue && dbGeo.Latitude.HasValue)
+            {
+                return new GeographyDto()
+                {
+                    Longitude = dbGeo.Longitude.Value,
+                    Latitude = dbGeo.Latitude.Value
+                };
+            }
+            else
+                return null;
+        }
     }
 }

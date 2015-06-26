@@ -14,6 +14,7 @@ namespace OutdoorSolution.Controllers
     {
         public PagingController()
         {
+            // TODO: move to settings
             DefaultPagingParams = new PagingParams()
             {
                 Take = 10
@@ -22,8 +23,8 @@ namespace OutdoorSolution.Controllers
 
         public abstract Task<IHttpActionResult> GetById(Guid id);
 
-        // TODO: add "TotalAmount" excluding
-        //public abstract Task<IHttpActionResult> Get([FromUri]PagingParams param);
+        // TODO: exclude TOTAL AMOUNT
+        protected abstract Link GetPagingLink(PagingParams pagingParams);
 
         protected Page<T> CreatePage<T>(IEnumerable<T> items, PagingParams param)
             where T : PageItem
@@ -39,7 +40,7 @@ namespace OutdoorSolution.Controllers
                     Skip = Math.Min(param.Skip + param.Take, param.TotalAmount),
                     Take = param.Take
                 };
-                //page.Next = Url.Link<C>(c => c.Get(nextParam));
+                page.Next = GetPagingLink(nextParam);
             }
 
             if (param.Skip != 0)
@@ -49,7 +50,7 @@ namespace OutdoorSolution.Controllers
                     Skip = Math.Max(param.Skip + param.Take, 0),
                     Take = param.Take
                 };
-                //page.Prev = Url.Link<C>(c => c.Get(prevParam));
+                page.Prev = GetPagingLink(prevParam);
             }
 
             return page;

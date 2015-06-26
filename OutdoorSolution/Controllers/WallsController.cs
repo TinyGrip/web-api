@@ -13,6 +13,7 @@ using OutdoorSolution.Dal;
 using OutdoorSolution.Domain.Models;
 using OutdoorSolution.Dto;
 using OutdoorSolution.Mapping;
+using OutdoorSolution.Helpers;
 
 namespace OutdoorSolution.Controllers
 {
@@ -20,18 +21,25 @@ namespace OutdoorSolution.Controllers
     {
         private readonly ApplicationDbContext db;
         private readonly WallMapService wallMapper;
+        private Guid? parentAreaId;
 
         public WallsController(ApplicationDbContext dbContext, WallMapService wallMapper)
         {
             db = dbContext;
             this.wallMapper = wallMapper;
         }
+
+        //public async Task<IHttpActionResult> Get(Guid areaId)
+        //{
+        //    return await Get(areaId, DefaultPagingParams);
+        //}
         
         public async Task<IHttpActionResult> Get(Guid areaId, PagingParams param) 
         {
             param = param ?? DefaultPagingParams;
 
-            var walls = await db.Walls.OrderByDescending(a => a.Name)
+            var walls = await db.Walls.Where(w => w.AreaId == areaId)
+                                      .OrderByDescending(a => a.Name)
                                       .Skip(param.Skip)
                                       .Take(param.Take)
                                       .ToListAsync();
@@ -39,10 +47,11 @@ namespace OutdoorSolution.Controllers
             if (walls.Count == 0)
                 return NotFound();
 
-            var wallsDtos = walls.Select(w => wallMapper.CreateWallDto(w)).ToList();
+            this.parentAreaId = areaId;
+
+            var wallsDtos = walls.Select(w => wallMapper.CreateWallDto(w, Url)).ToList();
             param.TotalAmount = wallsDtos.Count;
             walls = null;
-
 
             var responsePage = CreatePage<WallDto>(wallsDtos, param);
             return Ok(responsePage);
@@ -57,7 +66,7 @@ namespace OutdoorSolution.Controllers
                 return NotFound();
             }
 
-            var wallDto = wallMapper.CreateWallDto(wall);
+            var wallDto = wallMapper.CreateWallDto(wall, Url);
 
             return Ok(wallDto);
         }
@@ -99,7 +108,7 @@ namespace OutdoorSolution.Controllers
 
         // POST: api/Walls
         [ResponseType(typeof(Wall))]
-        public async Task<IHttpActionResult> PostWall(Guid areaId, WallDto wallDto)
+        public async Task<IHttpActionResult> PostWall(Guid areaId, [FromBody]WallDto wallDto)
         {
             if (!ModelState.IsValid)
             {
@@ -107,10 +116,12 @@ namespace OutdoorSolution.Controllers
             }
 
             var wall = wallMapper.CreateWall(wallDto);
+            wall.AreaId = areaId;
+            
             db.Walls.Add(wall);
             await db.SaveChangesAsync();
 
-            return CreatedAtRoute("DefaultApi", new { id = wall.Id }, wall);
+            return CreatedAtRoute("DefaultApi", new { id = wall.Id }, wallMapper.CreateWallDto(wall, Url));
         }
 
         // DELETE: api/Walls/5
@@ -127,6 +138,15 @@ namespace OutdoorSolution.Controllers
             await db.SaveChangesAsync();
 
             return Ok(wall);
+        }
+
+        protected override Link GetPagingLink(PagingParams pagingParams)
+        {
+            if (this.parentAreaId.HasValue)
+                return Url.Link<WallsController>(c => c.Get(this.parentAreaId.Value, pagingParams));
+            else
+                //return Url.Link<WallsController>(c => c.Get(pagingParams));
+                return null;
         }
 
         protected override void Dispose(bool disposing)

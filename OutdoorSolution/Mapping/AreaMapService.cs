@@ -33,18 +33,10 @@ namespace OutdoorSolution.Mapping
             if (urlHelper != null)
             {
                 areaDto.Self = urlHelper.Link<AreasController>(c => c.GetById(area.Id));
-                // TODO: add this when controllers available
                 areaDto.Walls = urlHelper.Link<WallsController>(w => w.Get(area.Id, null));
             }
 
-            if (area.Location != null && area.Location.Longitude.HasValue && area.Location.Latitude.HasValue)
-            {
-                areaDto.Location = new GeographyDto()
-                {
-                    Longitude = area.Location.Longitude.Value,
-                    Latitude = area.Location.Latitude.Value
-                };
-            }
+            areaDto.Location = Utils.CreateGeoDto(area.Location);
 
             return areaDto;
         }
@@ -80,7 +72,11 @@ namespace OutdoorSolution.Mapping
             return new AreaImageDto()
             {
                 Name = areaImage.Name,
-                Url = areaImage.Url
+                Link = new Link()
+                {
+                    Href = new Uri(areaImage.Url),
+                    Templated = false
+                }
             };
         }
 
@@ -89,7 +85,7 @@ namespace OutdoorSolution.Mapping
             return new AreaImage()
             {
                 Name = areaImageDto.Name,
-                Url = areaImageDto.Url
+                Url = areaImageDto.Href
             };
         }
     }

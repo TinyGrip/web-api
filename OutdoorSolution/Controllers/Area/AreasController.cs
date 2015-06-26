@@ -14,6 +14,7 @@ using OutdoorSolution.Models;
 using OutdoorSolution.Dto;
 using OutdoorSolution.Dal;
 using OutdoorSolution.Mapping;
+using OutdoorSolution.Helpers;
 
 namespace OutdoorSolution.Controllers
 {
@@ -118,6 +119,11 @@ namespace OutdoorSolution.Controllers
             return Ok(area);
         }
 
+        protected override Link GetPagingLink(PagingParams pagingParams)
+        {
+            return Url.Link<AreasController>(c => c.Get(pagingParams));
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -125,11 +131,6 @@ namespace OutdoorSolution.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
-        }
-
-        private bool AreaExists(Guid id)
-        {
-            return db.Areas.Count(e => e.Id == id) > 0;
         }
     }
 }

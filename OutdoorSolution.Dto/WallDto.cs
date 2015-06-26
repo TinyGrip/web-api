@@ -12,11 +12,14 @@ namespace OutdoorSolution.Dto
         [MaxLength(128)]
         public string Name { get; set; }
 
-        [MaxLength(512)]
-        public string Image { get; set; }
+        public Link Image { get; set; }
+
+        public string ImageHref { get; set; }
 
         public GeographyDto Location { get; set; }
 
         public Link Routes { get; set; }
+
+        public Link Area { get; set; }
     }
 }
