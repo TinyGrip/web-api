@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Http.Routing;
 using OutdoorSolution.Helpers;
 using OutdoorSolution.Controllers;
+using OutdoorSolution.Dto.Infrastructure;
 
 namespace OutdoorSolution.Mapping
 {
@@ -31,6 +32,8 @@ namespace OutdoorSolution.Mapping
                 wallDto.Self = urlHelper.Link<WallsController>(c => c.GetById(wall.Id));
                 wallDto.Area = urlHelper.Link<AreasController>(c => c.GetById(wall.AreaId));
                 //wallDto.Routes = urlHelper.Link<RouteController>(c => c.Get(wall.Id, null));
+                wallDto.Update = urlHelper.Link<WallsController>(c => c.PutWall(wall.Id, null));
+                wallDto.Delete = urlHelper.Link<WallsController>(c => c.DeleteWall(wall.Id));
             }
 
             return wallDto;
@@ -38,14 +41,16 @@ namespace OutdoorSolution.Mapping
 
         public Wall CreateWall(WallDto wallDto)
         {
-            var wall = new Wall()
-            {
-                Name = wallDto.Name,
-                Image = wallDto.ImageHref,
-                Location = Utils.CreateDbPoint(wallDto.Location)
-            };
-
+            var wall = new Wall();
+            UpdateWall(wall, wallDto);
             return wall;
+        }
+
+        public void UpdateWall(Wall wall, WallDto wallDto)
+        {
+            wall.Name = wallDto.Name;
+            wall.Image = wallDto.ImageHref;
+            wall.Location = Utils.CreateDbPoint(wallDto.Location);
         }
     }
 }

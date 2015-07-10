@@ -7,20 +7,13 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using OutdoorSolution.Helpers;
+using OutdoorSolution.Dto.Infrastructure;
+using OutdoorSolution.Models;
 
 namespace OutdoorSolution.Controllers
 {
     public abstract class PagingController<C> : ApiController where C: PagingController<C>
     {
-        public PagingController()
-        {
-            // TODO: move to settings
-            DefaultPagingParams = new PagingParams()
-            {
-                Take = 10
-            };
-        }
-
         public abstract Task<IHttpActionResult> GetById(Guid id);
 
         // TODO: exclude TOTAL AMOUNT
@@ -55,7 +48,5 @@ namespace OutdoorSolution.Controllers
 
             return page;
         }
-
-        protected PagingParams DefaultPagingParams { get; private set; }
     }
 }

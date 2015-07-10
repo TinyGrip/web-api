@@ -14,6 +14,8 @@ using OutdoorSolution.Domain.Models;
 using OutdoorSolution.Dto;
 using OutdoorSolution.Mapping;
 using OutdoorSolution.Helpers;
+using OutdoorSolution.Dto.Infrastructure;
+using OutdoorSolution.Models;
 
 namespace OutdoorSolution.Controllers
 {
@@ -33,11 +35,9 @@ namespace OutdoorSolution.Controllers
         //{
         //    return await Get(areaId, DefaultPagingParams);
         //}
-        
-        public async Task<IHttpActionResult> Get(Guid areaId, PagingParams param) 
-        {
-            param = param ?? DefaultPagingParams;
 
+        public async Task<IHttpActionResult> Get(Guid areaId, [FromUri]PagingParams param) 
+        {
             var walls = await db.Walls.Where(w => w.AreaId == areaId)
                                       .OrderByDescending(a => a.Name)
                                       .Skip(param.Skip)
@@ -71,42 +71,26 @@ namespace OutdoorSolution.Controllers
             return Ok(wallDto);
         }
 
-        // PUT: api/Walls/5
         [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutWall(Guid id, Wall wall)
+        public async Task<IHttpActionResult> PutWall(Guid id, WallDto wallDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != wall.Id)
+            var wall = await db.Walls.FindAsync(id);
+            if (wall == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            db.Entry(wall).State = EntityState.Modified;
-
-            try
-            {
-                await db.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!WallExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            wallMapper.UpdateWall(wall, wallDto);
+            await db.SaveChangesAsync();
 
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/Walls
         [ResponseType(typeof(Wall))]
         public async Task<IHttpActionResult> PostWall(Guid areaId, [FromBody]WallDto wallDto)
         {
@@ -124,7 +108,6 @@ namespace OutdoorSolution.Controllers
             return CreatedAtRoute("DefaultApi", new { id = wall.Id }, wallMapper.CreateWallDto(wall, Url));
         }
 
-        // DELETE: api/Walls/5
         [ResponseType(typeof(Wall))]
         public async Task<IHttpActionResult> DeleteWall(Guid id)
         {
@@ -156,11 +139,6 @@ namespace OutdoorSolution.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
-        }
-
-        private bool WallExists(Guid id)
-        {
-            return db.Walls.Count(e => e.Id == id) > 0;
         }
     }
 }

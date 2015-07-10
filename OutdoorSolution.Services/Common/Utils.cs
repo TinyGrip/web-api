@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Spatial;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,7 +13,9 @@ namespace OutdoorSolution.Services.Common
     {
         public static DbGeography CreateDbPoint(GeographyDto geoDto)
         {
-            var wellKnownText = String.Format("POINT ({0} {1})", geoDto.Latitude, geoDto.Longitude);
+            var wellKnownText = String.Format("POINT ({0} {1})", 
+                geoDto.Latitude.ToString(CultureInfo.InvariantCulture),
+                geoDto.Longitude.ToString(CultureInfo.InvariantCulture));
             return DbGeography.FromText(wellKnownText);
         }
 

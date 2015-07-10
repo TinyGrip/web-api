@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OutdoorSolution.Dto.Infrastructure;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -9,6 +10,11 @@ namespace OutdoorSolution.Dto
 {
     public class AreaDto : PageItem
     {
+        public AreaDto()
+        {
+            Images = new List<AreaImageDto>();
+        }
+
         [MaxLength(255)]
         public string Name { get; set; }
 
@@ -26,5 +32,7 @@ namespace OutdoorSolution.Dto
         public Link Walls { get; set; }
 
         public IEnumerable<AreaImageDto> Images { get; set; }
+
+        public Link AddWall { get; set; }
     }
 }

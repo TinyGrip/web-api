@@ -1,4 +1,5 @@
 ﻿using OutdoorSolution.Dto;
+using OutdoorSolution.Dto.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,6 +55,7 @@ namespace OutdoorSolution.Helpers
             var link = new Link();
             link.Href = new Uri(urlHelper.Link("DefaultApi", urlParamsDictionary));
             link.Templated = false;
+
             return link;
         }
 
@@ -65,6 +67,9 @@ namespace OutdoorSolution.Helpers
         /// <param name="argumentObj"></param>
         private static void ReadObjectProperties(Dictionary<string, object> dictionary, Type type, object argumentObj)
         {
+            if (argumentObj == null)
+                return;
+
             foreach (var objProp in type.GetProperties())
             {
                 var objPropValue = objProp.GetValue(argumentObj);                

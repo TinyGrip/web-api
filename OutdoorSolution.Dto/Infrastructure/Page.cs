@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OutdoorSolution.Dto
+namespace OutdoorSolution.Dto.Infrastructure
 {
     public class Page<T> where T : PageItem
     {

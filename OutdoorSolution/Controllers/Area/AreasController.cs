@@ -15,6 +15,7 @@ using OutdoorSolution.Dto;
 using OutdoorSolution.Dal;
 using OutdoorSolution.Mapping;
 using OutdoorSolution.Helpers;
+using OutdoorSolution.Dto.Infrastructure;
 
 namespace OutdoorSolution.Controllers
 {
@@ -45,7 +46,8 @@ namespace OutdoorSolution.Controllers
 
         [ResponseType(typeof(Page<AreaDto>))]
         public async Task<IHttpActionResult> Get([FromUri]PagingParams param)
-        {// TODO: check if to use eager loading!
+        {
+            // TODO: check if to use eager loading!
             var areas = await db.Areas.OrderByDescending(a => a.Name)
                                       .Skip(param.Skip)
                                       .Take(param.Take)

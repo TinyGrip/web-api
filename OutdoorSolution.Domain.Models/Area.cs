@@ -11,6 +11,12 @@ namespace OutdoorSolution.Domain.Models
 {
     public class Area
     {
+        public Area()
+        {
+            Walls = new List<Wall>();
+            Images = new List<AreaImage>();
+        }
+
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 

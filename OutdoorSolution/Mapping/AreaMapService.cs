@@ -10,6 +10,7 @@ using OutdoorSolution.Helpers;
 using OutdoorSolution.Controllers;
 using System.Data.Entity.Spatial;
 using OutdoorSolution.Services.Common;
+using OutdoorSolution.Dto.Infrastructure;
 
 namespace OutdoorSolution.Mapping
 {
@@ -34,6 +35,7 @@ namespace OutdoorSolution.Mapping
             {
                 areaDto.Self = urlHelper.Link<AreasController>(c => c.GetById(area.Id));
                 areaDto.Walls = urlHelper.Link<WallsController>(w => w.Get(area.Id, null));
+                areaDto.AddWall = urlHelper.Link<WallsController>(w => w.PostWall(area.Id, null));
             }
 
             areaDto.Location = Utils.CreateGeoDto(area.Location);
@@ -50,7 +52,8 @@ namespace OutdoorSolution.Mapping
         {
             var area = new Area();
             UpdateArea(area, areaDto);
-            area.Images = areaDto.Images.Select(x => CreateAreaImage(x)).ToList();
+            if (areaDto.Images != null)
+                area.Images = areaDto.Images.Select(x => CreateAreaImage(x)).ToList();
             return area;
         }
 

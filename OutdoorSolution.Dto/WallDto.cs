@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OutdoorSolution.Dto.Infrastructure;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -12,14 +13,18 @@ namespace OutdoorSolution.Dto
         [MaxLength(128)]
         public string Name { get; set; }
 
-        public Link Image { get; set; }
-
         public string ImageHref { get; set; }
 
         public GeographyDto Location { get; set; }
 
+        public Link Image { get; set; }
+
         public Link Routes { get; set; }
 
         public Link Area { get; set; }
+
+        public Link Update { get; set; }
+
+        public Link Delete { get; set; }
     }
 }
