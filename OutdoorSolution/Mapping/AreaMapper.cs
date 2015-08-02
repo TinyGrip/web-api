@@ -11,6 +11,7 @@ using OutdoorSolution.Controllers;
 using System.Data.Entity.Spatial;
 using OutdoorSolution.Services.Common;
 using OutdoorSolution.Dto.Infrastructure;
+using OutdoorSolution.Domain.Models.Infrastructure;
 
 namespace OutdoorSolution.Mapping
 {
@@ -68,6 +69,24 @@ namespace OutdoorSolution.Mapping
             area.Created = areaDto.Created;
             area.Location = Utils.CreateDbPoint(areaDto.Location);
             area.Description = areaDto.Description;
+        }
+
+        public AreaDto CreatePreviewAreaDto(PreviewArea area, UrlHelper urlHelper)
+        {
+            var areaDto = new AreaDto()
+            {
+                Name = area.Name,
+                Rating = area.Rating
+            };
+
+            if (urlHelper != null)
+            {
+                // Creating a link to AreaController in order to get full entry
+                areaDto.Self = urlHelper.Link<AreasController>(c => c.GetById(area.Id));
+            }
+
+            areaDto.Location = Utils.CreateGeoDto(area.Location);
+            return areaDto;
         }
 
         public AreaImageDto CreateAreaImageDto(AreaImage areaImage)

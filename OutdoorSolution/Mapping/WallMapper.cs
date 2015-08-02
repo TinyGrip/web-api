@@ -12,7 +12,7 @@ using OutdoorSolution.Dto.Infrastructure;
 
 namespace OutdoorSolution.Mapping
 {
-    public class WallMapService
+    public class WallMapper
     {
         public WallDto CreateWallDto(Wall wall, UrlHelper urlHelper)
         {

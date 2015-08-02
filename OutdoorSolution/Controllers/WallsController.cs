@@ -22,10 +22,10 @@ namespace OutdoorSolution.Controllers
     public class WallsController : PagingController<WallsController>
     {
         private readonly ApplicationDbContext db;
-        private readonly WallMapService wallMapper;
+        private readonly WallMapper wallMapper;
         private Guid? parentAreaId;
 
-        public WallsController(ApplicationDbContext dbContext, WallMapService wallMapper)
+        public WallsController(ApplicationDbContext dbContext, WallMapper wallMapper)
         {
             db = dbContext;
             this.wallMapper = wallMapper;

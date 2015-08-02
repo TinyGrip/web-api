@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OutdoorSolution.Domain.Models.Infrastructure;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -9,19 +10,13 @@ using System.Threading.Tasks;
 
 namespace OutdoorSolution.Domain.Models
 {
-    public class Area
+    public class Area : PreviewArea
     {
         public Area()
         {
             Walls = new List<Wall>();
             Images = new List<AreaImage>();
         }
-
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
-
-        [MaxLength(255)]
-        public string Name { get; set; }
 
         [MaxLength(32768)]
         public string Description { get; set; }
@@ -31,8 +26,6 @@ namespace OutdoorSolution.Domain.Models
         public double Rating { get; set; }
 
         public int RatingsCount { get; set; }
-
-        public DbGeography Location { get; set; }
 
         public virtual ICollection<Wall> Walls { get; set; }
 

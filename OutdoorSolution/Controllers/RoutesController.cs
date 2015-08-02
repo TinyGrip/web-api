@@ -22,13 +22,13 @@ namespace OutdoorSolution.Controllers
     public class RoutesController : PagingController<RoutesController>
     {
         private readonly ApplicationDbContext db;
-        private readonly RouteMapService routeMapService;
+        private readonly RouteMapper routeMapper;
         private Guid wallId;
 
-        public RoutesController(ApplicationDbContext dbContext, RouteMapService routeMapService)
+        public RoutesController(ApplicationDbContext dbContext, RouteMapper routeMapService)
         {
             db = dbContext;
-            this.routeMapService = routeMapService;
+            this.routeMapper = routeMapService;
         }
     
         public async override Task<IHttpActionResult> GetById(Guid id)
@@ -39,7 +39,7 @@ namespace OutdoorSolution.Controllers
                 return NotFound();
             }
 
-            var routeDto = routeMapService.CreateRouteDto(route, Url);
+            var routeDto = routeMapper.CreateRouteDto(route, Url);
 
             return Ok(routeDto);
         }
@@ -60,7 +60,7 @@ namespace OutdoorSolution.Controllers
 
             this.wallId = wallId;
 
-            var routesDto = routes.Select(x => routeMapService.CreateRouteDto(x, Url));
+            var routesDto = routes.Select(x => routeMapper.CreateRouteDto(x, Url));
             
 
             var page = CreatePage(routesDto, param);
@@ -80,7 +80,7 @@ namespace OutdoorSolution.Controllers
                 return BadRequest();
             }
 
-            routeMapService.UpdateRoute(route, routeDto);
+            routeMapper.UpdateRoute(route, routeDto);
             await db.SaveChangesAsync();
 
             return StatusCode(HttpStatusCode.NoContent);
@@ -93,7 +93,7 @@ namespace OutdoorSolution.Controllers
                 return BadRequest(ModelState);
             }
 
-            var route = routeMapService.CreateRoute(routeDto);
+            var route = routeMapper.CreateRoute(routeDto);
             route.WallId = wallId;
 
             db.Routes.Add(route);

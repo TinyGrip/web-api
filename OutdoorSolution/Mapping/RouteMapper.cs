@@ -11,7 +11,7 @@ using OutdoorSolution.Controllers;
 
 namespace OutdoorSolution.Mapping
 {
-    public class RouteMapService
+    public class RouteMapper
     {
         public RouteDto CreateRouteDto(Route route, UrlHelper urlHelper)
         {
