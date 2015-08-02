@@ -48,18 +48,19 @@ namespace OutdoorSolution.Controllers
         public async Task<IHttpActionResult> Get([FromUri]PagingParams param)
         {
             // TODO: check if to use eager loading!
+            param.TotalAmount = db.Areas.Count();
+            if (param.TotalAmount == 0)
+            {
+                return NotFound();
+            }
+
             var areas = await db.Areas.OrderByDescending(a => a.Name)
                                       .Skip(param.Skip)
                                       .Take(param.Take)
                                       .ToListAsync();
-            if (areas.Count == 0)
-            {
-                return NotFound();
-            }
             
             // TODO: think about memory
             var areaDtos = areas.Select( a => areaMapper.CreateAreaDto(a, Url) ).ToList();
-            param.TotalAmount = areas.Count;
             areas = null;
 
             var responsePage = CreatePage<AreaDto>(areaDtos, param);
@@ -118,7 +119,7 @@ namespace OutdoorSolution.Controllers
             db.Areas.Remove(area);
             await db.SaveChangesAsync();
 
-            return Ok(area);
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
         protected override Link GetPagingLink(PagingParams pagingParams)

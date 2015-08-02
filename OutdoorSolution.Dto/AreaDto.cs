@@ -29,9 +29,9 @@ namespace OutdoorSolution.Dto
 
         public GeographyDto Location { get; set; }
 
-        public Link Walls { get; set; }
-
         public IEnumerable<AreaImageDto> Images { get; set; }
+
+        public Link Walls { get; set; }
 
         public Link AddWall { get; set; }
     }

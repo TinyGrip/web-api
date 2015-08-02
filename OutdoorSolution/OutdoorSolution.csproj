@@ -218,6 +218,7 @@
     <Compile Include="Controllers\Area\AreasController.cs" />
     <Compile Include="Controllers\PagingController.cs" />
     <Compile Include="Controllers\RootController.cs" />
+    <Compile Include="Controllers\RoutesController.cs" />
     <Compile Include="Controllers\WallsController.cs" />
     <Compile Include="Helpers\UrlHelper.cs" />
     <Compile Include="IoC\Installers\ControllersInstaller.cs" />
@@ -231,6 +232,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Mapping\AreaMapService.cs" />
+    <Compile Include="Mapping\RouteMapService.cs" />
     <Compile Include="Mapping\WallMapService.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -307,6 +309,10 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\OutdoorSolution.Common\OutdoorSolution.Common.csproj">
+      <Project>{e7bfce17-3f9e-417c-9ff3-183cd3d5cc56}</Project>
+      <Name>OutdoorSolution.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OutdoorSolution.Dal\OutdoorSolution.Dal.csproj">
       <Project>{5321656d-2c43-4c64-acca-d85072bc8fa5}</Project>
       <Name>OutdoorSolution.Dal</Name>

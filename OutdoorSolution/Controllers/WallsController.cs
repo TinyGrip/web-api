@@ -31,33 +31,28 @@ namespace OutdoorSolution.Controllers
             this.wallMapper = wallMapper;
         }
 
-        //public async Task<IHttpActionResult> Get(Guid areaId)
-        //{
-        //    return await Get(areaId, DefaultPagingParams);
-        //}
-
         public async Task<IHttpActionResult> Get(Guid areaId, [FromUri]PagingParams param) 
         {
-            var walls = await db.Walls.Where(w => w.AreaId == areaId)
-                                      .OrderByDescending(a => a.Name)
-                                      .Skip(param.Skip)
-                                      .Take(param.Take)
-                                      .ToListAsync();
+            var q =  db.Walls.Where(w => w.AreaId == areaId);                        
+            param.TotalAmount = q.Count();
 
-            if (walls.Count == 0)
+            if (param.TotalAmount == 0)
                 return NotFound();
+
+            var walls = await q.OrderByDescending(a => a.Name)
+                               .Skip(param.Skip)
+                               .Take(param.Take)
+                               .ToListAsync();
 
             this.parentAreaId = areaId;
 
             var wallsDtos = walls.Select(w => wallMapper.CreateWallDto(w, Url)).ToList();
-            param.TotalAmount = wallsDtos.Count;
             walls = null;
 
             var responsePage = CreatePage<WallDto>(wallsDtos, param);
             return Ok(responsePage);
         }
 
-        [ResponseType(typeof(Wall))]
         public override async Task<IHttpActionResult> GetById(Guid id)
         {
             Wall wall = await db.Walls.FindAsync(id);
@@ -71,8 +66,7 @@ namespace OutdoorSolution.Controllers
             return Ok(wallDto);
         }
 
-        [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutWall(Guid id, WallDto wallDto)
+        public async Task<IHttpActionResult> PutWall(Guid id, [FromBody]WallDto wallDto)
         {
             if (!ModelState.IsValid)
             {
@@ -91,7 +85,6 @@ namespace OutdoorSolution.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        [ResponseType(typeof(Wall))]
         public async Task<IHttpActionResult> PostWall(Guid areaId, [FromBody]WallDto wallDto)
         {
             if (!ModelState.IsValid)
@@ -108,7 +101,6 @@ namespace OutdoorSolution.Controllers
             return CreatedAtRoute("DefaultApi", new { id = wall.Id }, wallMapper.CreateWallDto(wall, Url));
         }
 
-        [ResponseType(typeof(Wall))]
         public async Task<IHttpActionResult> DeleteWall(Guid id)
         {
             Wall wall = await db.Walls.FindAsync(id);
@@ -120,7 +112,7 @@ namespace OutdoorSolution.Controllers
             db.Walls.Remove(wall);
             await db.SaveChangesAsync();
 
-            return Ok(wall);
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
         protected override Link GetPagingLink(PagingParams pagingParams)

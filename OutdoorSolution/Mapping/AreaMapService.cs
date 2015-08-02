@@ -34,8 +34,8 @@ namespace OutdoorSolution.Mapping
             if (urlHelper != null)
             {
                 areaDto.Self = urlHelper.Link<AreasController>(c => c.GetById(area.Id));
-                areaDto.Walls = urlHelper.Link<WallsController>(w => w.Get(area.Id, null));
-                areaDto.AddWall = urlHelper.Link<WallsController>(w => w.PostWall(area.Id, null));
+                areaDto.Walls = urlHelper.Link<WallsController>(c => c.Get(area.Id, null));
+                areaDto.AddWall = urlHelper.Link<WallsController>(c => c.PostWall(area.Id, null));
             }
 
             areaDto.Location = Utils.CreateGeoDto(area.Location);

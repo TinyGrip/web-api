@@ -30,10 +30,10 @@ namespace OutdoorSolution.Mapping
             if (urlHelper != null)
             {
                 wallDto.Self = urlHelper.Link<WallsController>(c => c.GetById(wall.Id));
-                wallDto.Area = urlHelper.Link<AreasController>(c => c.GetById(wall.AreaId));
-                //wallDto.Routes = urlHelper.Link<RouteController>(c => c.Get(wall.Id, null));
                 wallDto.Update = urlHelper.Link<WallsController>(c => c.PutWall(wall.Id, null));
                 wallDto.Delete = urlHelper.Link<WallsController>(c => c.DeleteWall(wall.Id));
+                wallDto.Area = urlHelper.Link<AreasController>(c => c.GetById(wall.AreaId));
+                wallDto.Routes = urlHelper.Link<RoutesController>(c => c.Get(wall.Id, null));
             }
 
             return wallDto;

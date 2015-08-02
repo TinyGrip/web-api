@@ -19,12 +19,10 @@ namespace OutdoorSolution.Dto
 
         public Link Image { get; set; }
 
-        public Link Routes { get; set; }
-
         public Link Area { get; set; }
 
-        public Link Update { get; set; }
+        public Link Routes { get; set; }
 
-        public Link Delete { get; set; }
+        public Link AddRoute { get; set; }
     }
 }

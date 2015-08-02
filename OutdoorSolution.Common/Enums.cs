@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OutdoorSolution.Domain.Models
+namespace OutdoorSolution.Common
 {
     public enum RouteType
     {

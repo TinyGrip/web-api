@@ -40,7 +40,7 @@ namespace OutdoorSolution.Controllers
             {
                 var prevParam = new PagingParams()
                 {
-                    Skip = Math.Max(param.Skip + param.Take, 0),
+                    Skip = Math.Max(param.Skip - param.Take, 0),
                     Take = param.Take
                 };
                 page.Prev = GetPagingLink(prevParam);

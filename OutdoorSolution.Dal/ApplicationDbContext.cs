@@ -10,7 +10,7 @@ namespace OutdoorSolution.Dal
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()
-            : base("OutdoorSolution", throwIfV1Schema: false)
+            : base("DefaultConnection", throwIfV1Schema: false)
         {
         }
         
@@ -28,5 +28,7 @@ namespace OutdoorSolution.Dal
         public DbSet<RouteComment> RouteComments { get; set; }
 
         public System.Data.Entity.DbSet<OutdoorSolution.Domain.Models.AreaImage> AreaImages { get; set; }
+
+        public System.Data.Entity.DbSet<OutdoorSolution.Domain.Models.Route> Routes { get; set; }
     }
 }
