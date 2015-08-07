@@ -26,9 +26,11 @@ namespace OutdoorSolution
                 defaults: new { id = RouteParameter.Optional }
             );
 
+            config.Formatters.JsonFormatter.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
+
             // TODO: check ouy what is the best way to ahieve returning always json
             // is it content negotiation or this one?
-            GlobalConfiguration.Configuration.Formatters.XmlFormatter.SupportedMediaTypes.Clear();
+            config.Formatters.XmlFormatter.SupportedMediaTypes.Clear();
         }
     }
 }
