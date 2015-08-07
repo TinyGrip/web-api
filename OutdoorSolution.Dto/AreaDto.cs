@@ -31,6 +31,10 @@ namespace OutdoorSolution.Dto
 
         public IEnumerable<AreaImageDto> Images { get; set; }
 
+        public IEnumerable<WallDto> PreviewWalls { get; set; }
+
+        public IEnumerable<RouteDto> PreviewRoutes { get; set; }
+
         public Link Walls { get; set; }
 
         public Link AddWall { get; set; }

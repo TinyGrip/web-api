@@ -32,7 +32,6 @@ namespace OutdoorSolution.Controllers
         }
 
         [Route(AREA_IMAGE_ROUTE)]
-        [ResponseType(typeof(AreaImage))]
         public async Task<IHttpActionResult> GetById(Guid id)
         {
             AreaImage areaImage = await db.AreaImages.FindAsync(id);
@@ -45,7 +44,6 @@ namespace OutdoorSolution.Controllers
             return Ok(areaImageDto);
         }
 
-        [ResponseType(typeof(AreaImage))]
         public async Task<IHttpActionResult> GetByAreaId(Guid areaId)
         {
             var areaImages = await db.AreaImages.Where(ai => ai.AreaId == areaId).ToListAsync();
@@ -60,8 +58,6 @@ namespace OutdoorSolution.Controllers
             return Ok(areaImagesDtos);
         }
         
-        // POST: api/AreaImages
-        [ResponseType(typeof(AreaImage))]
         public async Task<IHttpActionResult> PostAreaImage(Guid areaId, [FromBody]AreaImageDto areaImageDto)
         {
             if (!ModelState.IsValid)
@@ -87,7 +83,6 @@ namespace OutdoorSolution.Controllers
         }
 
         [Route(AREA_IMAGE_ROUTE)]
-        [ResponseType(typeof(AreaImage))]
         public async Task<IHttpActionResult> DeleteAreaImage(Guid id)
         {
             AreaImage areaImage = await db.AreaImages.FindAsync(id);

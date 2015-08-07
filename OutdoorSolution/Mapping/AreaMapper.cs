@@ -20,6 +20,16 @@ namespace OutdoorSolution.Mapping
     /// </summary>
     public class AreaMapper
     {
+        private const int PREVIEW_ITEMS_COUNT = 3;
+        private readonly WallMapper wallMapper;
+        private readonly RouteMapper routeMapper;
+
+        public AreaMapper(WallMapper wallMapper, RouteMapper routeMapper)
+        {
+            this.wallMapper = wallMapper;
+            this.routeMapper = routeMapper;
+        }
+
         public AreaDto CreateAreaDto(Area area, UrlHelper urlHelper)
         {
             var areaDto = new AreaDto()
@@ -40,6 +50,22 @@ namespace OutdoorSolution.Mapping
             }
 
             areaDto.Location = Utils.CreateGeoDto(area.Location);
+
+            // add previews
+            areaDto.PreviewWalls = area.Walls.OrderBy(x => x.Name)
+                                             .Take(PREVIEW_ITEMS_COUNT)
+                                             .ToList()
+                                             .Select(w => wallMapper.CreateWallDto(w, urlHelper))
+                                             .ToList();
+
+            // TODO: debug requests to DB
+            areaDto.PreviewRoutes = area.Walls.SelectMany(w => w.Routes)
+                                              .OrderBy(r => r.Complexity)
+                                              .Take(PREVIEW_ITEMS_COUNT)
+                                              .ToList()
+                                              .Select(r => routeMapper.CreateRouteDto(r, urlHelper))
+                                              .ToList();
+
 
             return areaDto;
         }

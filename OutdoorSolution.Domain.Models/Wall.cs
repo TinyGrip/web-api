@@ -11,6 +11,11 @@ namespace OutdoorSolution.Domain.Models
 {
     public class Wall
     {
+        public Wall()
+        {
+            Routes = new List<Route>();
+        }
+
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
@@ -24,7 +29,7 @@ namespace OutdoorSolution.Domain.Models
 
         public Guid AreaId { get; set; }
 
-        public virtual IEnumerable<Route> Routes { get; set; }
+        public virtual ICollection<Route> Routes { get; set; }
 
         public virtual Area Area { get; set; }
     }
