@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +17,7 @@ namespace OutdoorSolution.Dto.Infrastructure
         /// <summary>
         /// Http method for using this Link's Href. Null value implies default method - GET
         /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
         public HttpMethods? Method { get; set; }
     }
 }

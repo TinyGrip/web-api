@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,9 +12,13 @@ namespace OutdoorSolution.Dto.Infrastructure
     /// </summary>
     public enum HttpMethods 
     {
+        [EnumMember(Value="GET")]
         Get,
+        [EnumMember(Value = "POST")]
         Post,
+        [EnumMember(Value = "PUT")]
         Put,
+        [EnumMember(Value = "DELETE")]
         Delete
     }
 }

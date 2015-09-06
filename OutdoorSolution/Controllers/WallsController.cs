@@ -66,6 +66,7 @@ namespace OutdoorSolution.Controllers
             return Ok(wallDto);
         }
 
+        [Authorize]
         public async Task<IHttpActionResult> PutWall(Guid id, [FromBody]WallDto wallDto)
         {
             if (!ModelState.IsValid)
@@ -85,6 +86,7 @@ namespace OutdoorSolution.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
+        [Authorize]
         public async Task<IHttpActionResult> PostWall(Guid areaId, [FromBody]WallDto wallDto)
         {
             if (!ModelState.IsValid)
@@ -101,6 +103,7 @@ namespace OutdoorSolution.Controllers
             return CreatedAtRoute("DefaultApi", new { id = wall.Id }, wallMapper.CreateWallDto(wall, Url));
         }
 
+        [Authorize]
         public async Task<IHttpActionResult> DeleteWall(Guid id)
         {
             Wall wall = await db.Walls.FindAsync(id);

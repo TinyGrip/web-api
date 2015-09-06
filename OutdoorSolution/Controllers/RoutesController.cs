@@ -67,6 +67,7 @@ namespace OutdoorSolution.Controllers
             return Ok(page);
         }
 
+        [Authorize]
         public async Task<IHttpActionResult> PutRoute(Guid id, [FromBody]RouteDto routeDto)
         {
             if (!ModelState.IsValid)
@@ -86,6 +87,7 @@ namespace OutdoorSolution.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
+        [Authorize]
         public async Task<IHttpActionResult> PostRoute(Guid wallId, [FromBody]RouteDto routeDto)
         {
             if (!ModelState.IsValid)
@@ -102,6 +104,7 @@ namespace OutdoorSolution.Controllers
             return CreatedAtRoute("DefaultApi", new { id = route.Id }, routeDto);
         }
 
+        [Authorize]
         public async Task<IHttpActionResult> DeleteRoute(Guid id)
         {
             Route route = await db.Routes.FindAsync(id);

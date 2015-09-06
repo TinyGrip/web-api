@@ -68,6 +68,7 @@ namespace OutdoorSolution.Controllers
         }
 
         [ResponseType(typeof(void))]
+        [Authorize]
         public async Task<IHttpActionResult> PutArea(Guid id, AreaDto areaDto)
         {
             if (!ModelState.IsValid)
@@ -87,6 +88,7 @@ namespace OutdoorSolution.Controllers
         }
 
         [ResponseType(typeof(Area))]
+        [Authorize]
         public async Task<IHttpActionResult> PostArea(AreaDto areaDto)
         {
             if (!ModelState.IsValid)
@@ -108,6 +110,7 @@ namespace OutdoorSolution.Controllers
         }
 
         [ResponseType(typeof(Area))]
+        [Authorize]
         public async Task<IHttpActionResult> DeleteArea(Guid id)
         {
             Area area = await db.Areas.FindAsync(id);

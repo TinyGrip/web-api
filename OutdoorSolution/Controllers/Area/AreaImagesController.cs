@@ -57,7 +57,8 @@ namespace OutdoorSolution.Controllers
 
             return Ok(areaImagesDtos);
         }
-        
+
+        [Authorize]
         public async Task<IHttpActionResult> PostAreaImage(Guid areaId, [FromBody]AreaImageDto areaImageDto)
         {
             if (!ModelState.IsValid)
@@ -83,6 +84,7 @@ namespace OutdoorSolution.Controllers
         }
 
         [Route(AREA_IMAGE_ROUTE)]
+        [Authorize]
         public async Task<IHttpActionResult> DeleteAreaImage(Guid id)
         {
             AreaImage areaImage = await db.AreaImages.FindAsync(id);

@@ -95,5 +95,21 @@ namespace OutdoorSolution.Helpers
         {
             return pInfo.GetCustomAttributes(typeof(FromUriAttribute), false).Count() > 0;
         }
+
+        /// <summary>
+        /// Returns link to resource, that is not exposed through web api controller
+        /// </summary>
+        /// <param name="resourcePath"></param>
+        /// <returns></returns>
+        public static Link GetSpecialResource(this UrlHelper urlHelper, string resourcePath, HttpMethods? httpMethod = null)
+        {
+            var requestUri = urlHelper.Request.RequestUri;
+            return new Link()
+            {
+                Href = new Uri(requestUri.Scheme + "://" + requestUri.Host + ":" + requestUri.Port + resourcePath),
+                Templated = true,
+                Method = httpMethod
+            };
+        }
     }
 }
