@@ -17,6 +17,7 @@ using OutdoorSolution.Models;
 using OutdoorSolution.Providers;
 using OutdoorSolution.Results;
 using OutdoorSolution.Domain.Models;
+using OutdoorSolution.Dal;
 
 namespace OutdoorSolution.Controllers
 {
@@ -47,6 +48,14 @@ namespace OutdoorSolution.Controllers
             private set
             {
                 _userManager = value;
+            }
+        }
+
+        private ApplicationDbContext DbContext
+        {
+            get
+            {
+                return Request.GetOwinContext().Get<ApplicationDbContext>();
             }
         }
 
@@ -330,12 +339,33 @@ namespace OutdoorSolution.Controllers
             }
 
             var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
-
-            IdentityResult result = await UserManager.CreateAsync(user, model.Password);
-
-            if (!result.Succeeded)
+            
+            using (var dbContextTransaction = DbContext.Database.BeginTransaction())
             {
-                return GetErrorResult(result);
+                try
+                {
+                    IdentityResult createResult = await UserManager.CreateAsync(user, model.Password);
+                    // add user to 'User' role by default
+                    IdentityResult addToRoleResult = await UserManager.AddToRoleAsync(user.Id, RoleNames.User);
+
+                    if (!createResult.Succeeded)
+                    {
+                        dbContextTransaction.Rollback();
+                        return GetErrorResult(createResult);
+                    }
+                    if (!addToRoleResult.Succeeded)
+                    {
+                        dbContextTransaction.Rollback();
+                        return InternalServerError();
+                    }
+                        
+                    dbContextTransaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    dbContextTransaction.Rollback();
+                    return InternalServerError(ex);
+                }
             }
 
             return Ok();
