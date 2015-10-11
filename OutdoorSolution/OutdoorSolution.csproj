@@ -221,6 +221,7 @@
     <Compile Include="Controllers\RootController.cs" />
     <Compile Include="Controllers\RoutesController.cs" />
     <Compile Include="Controllers\WallsController.cs" />
+    <Compile Include="Filters\ValidateModelAttribute.cs" />
     <Compile Include="Helpers\UrlHelper.cs" />
     <Compile Include="IoC\Installers\ControllersInstaller.cs" />
     <Compile Include="IoC\Installers\ServicesInstaller.cs" />

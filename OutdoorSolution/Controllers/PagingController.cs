@@ -12,7 +12,7 @@ using OutdoorSolution.Models;
 
 namespace OutdoorSolution.Controllers
 {
-    public abstract class PagingController<C> : ApiController where C: PagingController<C>
+    public abstract class PagingController : ApiController
     {
         public abstract Task<IHttpActionResult> GetById(Guid id);
 

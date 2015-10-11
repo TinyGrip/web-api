@@ -19,7 +19,7 @@ using OutdoorSolution.Models;
 
 namespace OutdoorSolution.Controllers
 {
-    public class WallsController : PagingController<WallsController>
+    public class WallsController : PagingController
     {
         private readonly ApplicationDbContext db;
         private readonly WallMapper wallMapper;
@@ -69,11 +69,6 @@ namespace OutdoorSolution.Controllers
         [Authorize]
         public async Task<IHttpActionResult> PutWall(Guid id, [FromBody]WallDto wallDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var wall = await db.Walls.FindAsync(id);
             if (wall == null)
             {
@@ -89,11 +84,6 @@ namespace OutdoorSolution.Controllers
         [Authorize]
         public async Task<IHttpActionResult> PostWall(Guid areaId, [FromBody]WallDto wallDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var wall = wallMapper.CreateWall(wallDto);
             wall.AreaId = areaId;
             

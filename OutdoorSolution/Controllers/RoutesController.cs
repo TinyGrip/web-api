@@ -19,7 +19,7 @@ using OutdoorSolution.Dto.Infrastructure;
 
 namespace OutdoorSolution.Controllers
 {
-    public class RoutesController : PagingController<RoutesController>
+    public class RoutesController : PagingController
     {
         private readonly ApplicationDbContext db;
         private readonly RouteMapper routeMapper;
@@ -70,11 +70,6 @@ namespace OutdoorSolution.Controllers
         [Authorize]
         public async Task<IHttpActionResult> PutRoute(Guid id, [FromBody]RouteDto routeDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var route = await db.Routes.FindAsync(id);
             if (route == null)
             {
@@ -90,11 +85,6 @@ namespace OutdoorSolution.Controllers
         [Authorize]
         public async Task<IHttpActionResult> PostRoute(Guid wallId, [FromBody]RouteDto routeDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var route = routeMapper.CreateRoute(routeDto);
             route.WallId = wallId;
 

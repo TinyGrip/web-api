@@ -23,8 +23,6 @@ namespace OutdoorSolution.Domain.Models
 
         public DateTime Created { get; set; }
 
-        public double Rating { get; set; }
-
         public int RatingsCount { get; set; }
 
         public virtual ICollection<Wall> Walls { get; set; }

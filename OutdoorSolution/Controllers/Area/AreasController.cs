@@ -16,10 +16,11 @@ using OutdoorSolution.Dal;
 using OutdoorSolution.Mapping;
 using OutdoorSolution.Helpers;
 using OutdoorSolution.Dto.Infrastructure;
+using OutdoorSolution.Filters;
 
 namespace OutdoorSolution.Controllers
 {
-    public class AreasController : PagingController<AreasController>
+    public class AreasController : PagingController
     {
         private readonly ApplicationDbContext db;
         private readonly AreaMapper areaMapper;
@@ -71,11 +72,6 @@ namespace OutdoorSolution.Controllers
         [Authorize]
         public async Task<IHttpActionResult> PutArea(Guid id, AreaDto areaDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             Area area = await db.Areas.FindAsync(id);
 
             if (area == null)
@@ -91,11 +87,6 @@ namespace OutdoorSolution.Controllers
         [Authorize]
         public async Task<IHttpActionResult> PostArea(AreaDto areaDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             areaDto.Created = DateTime.Now;
 
             // create db model and save it

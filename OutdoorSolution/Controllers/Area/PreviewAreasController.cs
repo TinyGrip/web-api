@@ -19,7 +19,7 @@ using OutdoorSolution.Helpers;
 
 namespace OutdoorSolution.Controllers
 {
-    public class PreviewAreasController : PagingController<PreviewAreasController>
+    public class PreviewAreasController : PagingController
     {
         private readonly ApplicationDbContext db;
         private readonly AreaMapper areaMapper;

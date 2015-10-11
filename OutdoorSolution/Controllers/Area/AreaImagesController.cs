@@ -61,11 +61,6 @@ namespace OutdoorSolution.Controllers
         [Authorize]
         public async Task<IHttpActionResult> PostAreaImage(Guid areaId, [FromBody]AreaImageDto areaImageDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var area = await db.Areas.FindAsync(areaId);
             if (area == null)
             {
