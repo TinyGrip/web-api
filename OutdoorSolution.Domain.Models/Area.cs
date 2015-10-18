@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace OutdoorSolution.Domain.Models
 {
-    public class Area : PreviewArea
+    public class Area : PreviewArea, IUserResource
     {
         public Area()
         {

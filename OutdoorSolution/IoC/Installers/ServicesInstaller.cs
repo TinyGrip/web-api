@@ -3,6 +3,7 @@ using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 using OutdoorSolution.Dal;
+using OutdoorSolution.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,8 @@ namespace OutdoorSolution.IoC.Installers
                                       .InNamespace(@"OutdoorSolution.Mapping")
                                       .LifestyleTransient());
 
-            container.Register(Classes.FromAssemblyNamed("OutdoorSolution.Services"));
+            // TODO: think about lifestyle for services!
+            container.Register(Classes.FromAssemblyContaining<PermissionsService>().Pick().LifestyleSingleton());
             
             container.Register(Component.For<ApplicationDbContext>()
                                         .Properties(PropertyFilter.IgnoreAll)

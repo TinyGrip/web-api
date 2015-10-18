@@ -79,6 +79,7 @@ namespace OutdoorSolution.Mapping
         {
             var area = new Area();
             UpdateArea(area, areaDto);
+            area.Created = DateTime.UtcNow;
             if (areaDto.Images != null)
                 area.Images = areaDto.Images.Select(x => CreateAreaImage(x)).ToList();
             return area;
@@ -92,7 +93,6 @@ namespace OutdoorSolution.Mapping
         public void UpdateArea(Area area, AreaDto areaDto)
         {
             area.Name = areaDto.Name;
-            area.Created = areaDto.Created;
             area.Location = Utils.CreateDbPoint(areaDto.Location);
             area.Description = areaDto.Description;
         }

@@ -21,12 +21,11 @@ namespace OutdoorSolution.Controllers
 {
     public class PreviewAreasController : PagingController
     {
-        private readonly ApplicationDbContext db;
         private readonly AreaMapper areaMapper;
 
         public PreviewAreasController(ApplicationDbContext dbContext, AreaMapper areaMapper)
+            :base(dbContext, null)
         {
-            db = dbContext;
             this.areaMapper = areaMapper;
         }
 
@@ -58,15 +57,6 @@ namespace OutdoorSolution.Controllers
 
             var responsePage = CreatePage<AreaDto>(areaDtos, param);
             return Ok(responsePage);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
         }
 
         // no need to implement. should never be executed

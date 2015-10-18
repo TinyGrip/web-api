@@ -16,18 +16,18 @@ using OutdoorSolution.Mapping;
 using OutdoorSolution.Helpers;
 using OutdoorSolution.Dto.Infrastructure;
 using OutdoorSolution.Models;
+using OutdoorSolution.Services;
 
 namespace OutdoorSolution.Controllers
 {
     public class WallsController : PagingController
     {
-        private readonly ApplicationDbContext db;
         private readonly WallMapper wallMapper;
         private Guid? parentAreaId;
 
-        public WallsController(ApplicationDbContext dbContext, WallMapper wallMapper)
+        public WallsController(ApplicationDbContext dbContext, PermissionsService permissionsService, WallMapper wallMapper)
+            : base(dbContext, permissionsService)
         {
-            db = dbContext;
             this.wallMapper = wallMapper;
         }
 
@@ -71,9 +71,10 @@ namespace OutdoorSolution.Controllers
         {
             var wall = await db.Walls.FindAsync(id);
             if (wall == null)
-            {
                 return NotFound();
-            }
+
+            if (!this.permissionsService.CanUserModifyResource(User, wall))
+                return StatusCode(HttpStatusCode.Forbidden);
 
             wallMapper.UpdateWall(wall, wallDto);
             await db.SaveChangesAsync();
@@ -101,6 +102,8 @@ namespace OutdoorSolution.Controllers
             {
                 return NotFound();
             }
+            if (!this.permissionsService.CanUserDeleteResource(User, wall))
+                return StatusCode(HttpStatusCode.Forbidden);
 
             db.Walls.Remove(wall);
             await db.SaveChangesAsync();
@@ -115,15 +118,6 @@ namespace OutdoorSolution.Controllers
             else
                 //return Url.Link<WallsController>(c => c.Get(pagingParams));
                 return null;
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
         }
     }
 }

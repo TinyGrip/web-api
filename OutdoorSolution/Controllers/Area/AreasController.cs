@@ -17,17 +17,17 @@ using OutdoorSolution.Mapping;
 using OutdoorSolution.Helpers;
 using OutdoorSolution.Dto.Infrastructure;
 using OutdoorSolution.Filters;
+using OutdoorSolution.Services;
 
 namespace OutdoorSolution.Controllers
 {
     public class AreasController : PagingController
     {
-        private readonly ApplicationDbContext db;
         private readonly AreaMapper areaMapper;
 
-        public AreasController(ApplicationDbContext dbContenxt, AreaMapper areaMapper)
+        public AreasController(ApplicationDbContext dbContext, AreaMapper areaMapper, PermissionsService permissionsService)
+            : base(dbContext, permissionsService)
         {
-            this.db = dbContenxt;
             this.areaMapper = areaMapper;
         }
 
@@ -68,14 +68,15 @@ namespace OutdoorSolution.Controllers
             return Ok(responsePage);
         }
 
-        [ResponseType(typeof(void))]
         [Authorize]
         public async Task<IHttpActionResult> PutArea(Guid id, AreaDto areaDto)
         {
             Area area = await db.Areas.FindAsync(id);
-
             if (area == null)
-                return BadRequest("Not existing area");
+                return NotFound();
+
+            if (!this.permissionsService.CanUserModifyResource(User, area))
+                return StatusCode(HttpStatusCode.Forbidden);
 
             areaMapper.UpdateArea(area, areaDto);
 
@@ -83,7 +84,6 @@ namespace OutdoorSolution.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        [ResponseType(typeof(Area))]
         [Authorize]
         public async Task<IHttpActionResult> PostArea(AreaDto areaDto)
         {
@@ -100,7 +100,6 @@ namespace OutdoorSolution.Controllers
             return CreatedAtRoute("DefaultApi", new { id = area.Id }, areaDto);
         }
 
-        [ResponseType(typeof(Area))]
         [Authorize]
         public async Task<IHttpActionResult> DeleteArea(Guid id)
         {
@@ -109,6 +108,8 @@ namespace OutdoorSolution.Controllers
             {
                 return NotFound();
             }
+            if (!this.permissionsService.CanUserDeleteResource(User, area))
+                return StatusCode(HttpStatusCode.Forbidden);
 
             db.Areas.Remove(area);
             await db.SaveChangesAsync();
@@ -119,15 +120,6 @@ namespace OutdoorSolution.Controllers
         protected override Link GetPagingLink(PagingParams pagingParams)
         {
             return Url.Link<AreasController>(c => c.Get(pagingParams));
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
         }
     }
 }

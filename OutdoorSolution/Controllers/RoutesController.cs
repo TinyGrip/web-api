@@ -16,18 +16,18 @@ using OutdoorSolution.Dto;
 using OutdoorSolution.Models;
 using OutdoorSolution.Helpers;
 using OutdoorSolution.Dto.Infrastructure;
+using OutdoorSolution.Services;
 
 namespace OutdoorSolution.Controllers
 {
     public class RoutesController : PagingController
     {
-        private readonly ApplicationDbContext db;
         private readonly RouteMapper routeMapper;
         private Guid wallId;
 
-        public RoutesController(ApplicationDbContext dbContext, RouteMapper routeMapService)
+        public RoutesController(ApplicationDbContext dbContext, PermissionsService permissionsService, RouteMapper routeMapService)
+            : base(dbContext, permissionsService)
         {
-            db = dbContext;
             this.routeMapper = routeMapService;
         }
     
@@ -72,9 +72,10 @@ namespace OutdoorSolution.Controllers
         {
             var route = await db.Routes.FindAsync(id);
             if (route == null)
-            {
                 return BadRequest();
-            }
+
+            if (!this.permissionsService.CanUserModifyResource(User, route))
+                return StatusCode(HttpStatusCode.Forbidden);
 
             routeMapper.UpdateRoute(route, routeDto);
             await db.SaveChangesAsync();
@@ -102,6 +103,8 @@ namespace OutdoorSolution.Controllers
             {
                 return NotFound();
             }
+            if (!this.permissionsService.CanUserDeleteResource(User, route))
+                return StatusCode(HttpStatusCode.Forbidden);
 
             db.Routes.Remove(route);
             await db.SaveChangesAsync();
@@ -112,15 +115,6 @@ namespace OutdoorSolution.Controllers
         protected override Link GetPagingLink(PagingParams pagingParams)
         {
             return Url.Link<RoutesController>(c => c.Get(wallId, pagingParams));
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
         }
     }
 }

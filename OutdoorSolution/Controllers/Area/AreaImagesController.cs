@@ -14,6 +14,7 @@ using OutdoorSolution.Domain.Models;
 using OutdoorSolution.Mapping;
 using OutdoorSolution.Dto;
 using OutdoorSolution.Helpers;
+using OutdoorSolution.Services;
 
 namespace OutdoorSolution.Controllers
 {
@@ -24,11 +25,13 @@ namespace OutdoorSolution.Controllers
 
         private readonly ApplicationDbContext db;
         private readonly AreaMapper areaMapper;
+        private readonly PermissionsService permissionsService;
 
-        public AreaImagesController(ApplicationDbContext dbContenxt, AreaMapper areaMapper)
+        public AreaImagesController(ApplicationDbContext dbContenxt, AreaMapper areaMapper, PermissionsService permissionsService)
         {
             db = dbContenxt;
             this.areaMapper = areaMapper;
+            this.permissionsService = permissionsService;
         }
 
         [Route(AREA_IMAGE_ROUTE)]
@@ -87,6 +90,8 @@ namespace OutdoorSolution.Controllers
             {
                 return NotFound();
             }
+            if (!this.permissionsService.CanUserDeleteResource(User, areaImage))
+                return StatusCode(HttpStatusCode.Forbidden);
 
             db.AreaImages.Remove(areaImage);
             await db.SaveChangesAsync();

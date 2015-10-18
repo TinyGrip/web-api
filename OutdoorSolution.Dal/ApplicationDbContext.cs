@@ -27,8 +27,8 @@ namespace OutdoorSolution.Dal
 
         public DbSet<RouteComment> RouteComments { get; set; }
 
-        public System.Data.Entity.DbSet<OutdoorSolution.Domain.Models.AreaImage> AreaImages { get; set; }
+        public DbSet<AreaImage> AreaImages { get; set; }
 
-        public System.Data.Entity.DbSet<OutdoorSolution.Domain.Models.Route> Routes { get; set; }
+        public DbSet<Route> Routes { get; set; }
     }
 }

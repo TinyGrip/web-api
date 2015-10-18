@@ -9,11 +9,22 @@ using System.Web.Http;
 using OutdoorSolution.Helpers;
 using OutdoorSolution.Dto.Infrastructure;
 using OutdoorSolution.Models;
+using OutdoorSolution.Dal;
+using OutdoorSolution.Services;
 
 namespace OutdoorSolution.Controllers
 {
     public abstract class PagingController : ApiController
     {
+        protected readonly ApplicationDbContext db;
+        protected readonly PermissionsService permissionsService;
+
+        public PagingController(ApplicationDbContext dbContext, PermissionsService permissionsService)
+        {
+            this.db = dbContext;
+            this.permissionsService = permissionsService;
+        }
+
         public abstract Task<IHttpActionResult> GetById(Guid id);
 
         // TODO: exclude TOTAL AMOUNT
@@ -47,6 +58,15 @@ namespace OutdoorSolution.Controllers
             }
 
             return page;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }

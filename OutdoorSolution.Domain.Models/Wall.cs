@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OutdoorSolution.Domain.Models.Infrastructure;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace OutdoorSolution.Domain.Models
 {
-    public class Wall
+    public class Wall : IUserResource
     {
         public Wall()
         {
@@ -32,5 +33,10 @@ namespace OutdoorSolution.Domain.Models
         public virtual ICollection<Route> Routes { get; set; }
 
         public virtual Area Area { get; set; }
+
+        [ForeignKey("User")]
+        public string UserId { get; set; }
+
+        public virtual ApplicationUser User { get; set; }
     }
 }
