@@ -27,8 +27,8 @@ namespace OutdoorSolution.Mapping
             {
                 routeDto.Self = urlHelper.Link<RoutesController>(c => c.GetById(route.Id));
                 routeDto.Wall = urlHelper.Link<WallsController>(c => c.GetById(route.WallId));
-                routeDto.Update = urlHelper.Link<RoutesController>(c => c.PutRoute(route.Id, null));
-                routeDto.Delete = urlHelper.Link<RoutesController>(c => c.DeleteRoute(route.Id));
+                routeDto.Update = urlHelper.Link<RoutesController>(c => c.Put(route.Id, null));
+                routeDto.Delete = urlHelper.Link<RoutesController>(c => c.Delete(route.Id));
             }
 
             return routeDto;

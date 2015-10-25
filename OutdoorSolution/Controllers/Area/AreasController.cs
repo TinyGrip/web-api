@@ -21,7 +21,7 @@ using OutdoorSolution.Services;
 
 namespace OutdoorSolution.Controllers
 {
-    public class AreasController : PagingController
+    public class AreasController : UserResourceController<Area, AreaDto>
     {
         private readonly AreaMapper areaMapper;
 
@@ -31,21 +31,6 @@ namespace OutdoorSolution.Controllers
             this.areaMapper = areaMapper;
         }
 
-        [ResponseType(typeof(AreaDto))]
-        public override async Task<IHttpActionResult> GetById(Guid id)
-        {
-            Area area = await db.Areas.FindAsync(id);
-            if (area == null)
-            {
-                return NotFound();
-            }
-
-            var areaDto = areaMapper.CreateAreaDto(area, Url);
-
-            return Ok(areaDto);
-        }
-
-        [ResponseType(typeof(Page<AreaDto>))]
         public async Task<IHttpActionResult> Get([FromUri]PagingParams param)
         {
             // TODO: check if to use eager loading!
@@ -59,29 +44,13 @@ namespace OutdoorSolution.Controllers
                                       .Skip(param.Skip)
                                       .Take(param.Take)
                                       .ToListAsync();
-            
+
             // TODO: think about memory
-            var areaDtos = areas.Select( a => areaMapper.CreateAreaDto(a, Url) ).ToList();
+            var areaDtos = areas.Select(a => CreateDto(a)).ToList();
             areas = null;
 
             var responsePage = CreatePage<AreaDto>(areaDtos, param);
             return Ok(responsePage);
-        }
-
-        [Authorize]
-        public async Task<IHttpActionResult> PutArea(Guid id, AreaDto areaDto)
-        {
-            Area area = await db.Areas.FindAsync(id);
-            if (area == null)
-                return NotFound();
-
-            if (!this.permissionsService.CanUserModifyResource(User, area))
-                return StatusCode(HttpStatusCode.Forbidden);
-
-            areaMapper.UpdateArea(area, areaDto);
-
-            await db.SaveChangesAsync();
-            return StatusCode(HttpStatusCode.NoContent);
         }
 
         [Authorize]
@@ -95,31 +64,24 @@ namespace OutdoorSolution.Controllers
             await db.SaveChangesAsync();
 
             // create dto model of saved area
-            areaDto = areaMapper.CreateAreaDto(area, Url);
+            areaDto = CreateDto(area);
 
             return CreatedAtRoute("DefaultApi", new { id = area.Id }, areaDto);
-        }
-
-        [Authorize]
-        public async Task<IHttpActionResult> DeleteArea(Guid id)
-        {
-            Area area = await db.Areas.FindAsync(id);
-            if (area == null)
-            {
-                return NotFound();
-            }
-            if (!this.permissionsService.CanUserDeleteResource(User, area))
-                return StatusCode(HttpStatusCode.Forbidden);
-
-            db.Areas.Remove(area);
-            await db.SaveChangesAsync();
-
-            return StatusCode(HttpStatusCode.NoContent);
         }
 
         protected override Link GetPagingLink(PagingParams pagingParams)
         {
             return Url.Link<AreasController>(c => c.Get(pagingParams));
+        }
+
+        protected override AreaDto CreateDto(Area resource)
+        {
+            return areaMapper.CreateAreaDto(resource, Url);
+        }
+
+        protected override void Update(Area resource, AreaDto resourceDto)
+        {
+            areaMapper.UpdateArea(resource, resourceDto);
         }
     }
 }

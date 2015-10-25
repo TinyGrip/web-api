@@ -20,7 +20,7 @@ using OutdoorSolution.Services;
 
 namespace OutdoorSolution.Controllers
 {
-    public class RoutesController : PagingController
+    public class RoutesController : UserResourceController<Route, RouteDto>
     {
         private readonly RouteMapper routeMapper;
         private Guid wallId;
@@ -29,19 +29,6 @@ namespace OutdoorSolution.Controllers
             : base(dbContext, permissionsService)
         {
             this.routeMapper = routeMapService;
-        }
-    
-        public async override Task<IHttpActionResult> GetById(Guid id)
-        {
-            Route route = await db.Routes.FindAsync(id);
-            if (route == null)
-            {
-                return NotFound();
-            }
-
-            var routeDto = routeMapper.CreateRouteDto(route, Url);
-
-            return Ok(routeDto);
         }
 
         public async Task<IHttpActionResult> Get(Guid wallId, [FromUri]PagingParams param)
@@ -62,29 +49,12 @@ namespace OutdoorSolution.Controllers
 
             var routesDto = routes.Select(x => routeMapper.CreateRouteDto(x, Url));
             
-
             var page = CreatePage(routesDto, param);
             return Ok(page);
         }
 
         [Authorize]
-        public async Task<IHttpActionResult> PutRoute(Guid id, [FromBody]RouteDto routeDto)
-        {
-            var route = await db.Routes.FindAsync(id);
-            if (route == null)
-                return BadRequest();
-
-            if (!this.permissionsService.CanUserModifyResource(User, route))
-                return StatusCode(HttpStatusCode.Forbidden);
-
-            routeMapper.UpdateRoute(route, routeDto);
-            await db.SaveChangesAsync();
-
-            return StatusCode(HttpStatusCode.NoContent);
-        }
-
-        [Authorize]
-        public async Task<IHttpActionResult> PostRoute(Guid wallId, [FromBody]RouteDto routeDto)
+        public async Task<IHttpActionResult> Post(Guid wallId, [FromBody]RouteDto routeDto)
         {
             var route = routeMapper.CreateRoute(routeDto);
             route.WallId = wallId;
@@ -95,26 +65,19 @@ namespace OutdoorSolution.Controllers
             return CreatedAtRoute("DefaultApi", new { id = route.Id }, routeDto);
         }
 
-        [Authorize]
-        public async Task<IHttpActionResult> DeleteRoute(Guid id)
-        {
-            Route route = await db.Routes.FindAsync(id);
-            if (route == null)
-            {
-                return NotFound();
-            }
-            if (!this.permissionsService.CanUserDeleteResource(User, route))
-                return StatusCode(HttpStatusCode.Forbidden);
-
-            db.Routes.Remove(route);
-            await db.SaveChangesAsync();
-
-            return StatusCode(HttpStatusCode.NoContent);
-        }
-
         protected override Link GetPagingLink(PagingParams pagingParams)
         {
             return Url.Link<RoutesController>(c => c.Get(wallId, pagingParams));
+        }
+
+        protected override RouteDto CreateDto(Route resource)
+        {
+            return routeMapper.CreateRouteDto(resource, Url);
+        }
+
+        protected override void Update(Route resource, RouteDto resourceDto)
+        {
+            routeMapper.UpdateRoute(resource, resourceDto);
         }
     }
 }

@@ -20,7 +20,7 @@ using OutdoorSolution.Services;
 
 namespace OutdoorSolution.Controllers
 {
-    public class WallsController : PagingController
+    public class WallsController : UserResourceController<Wall, WallDto>
     {
         private readonly WallMapper wallMapper;
         private Guid? parentAreaId;
@@ -53,62 +53,16 @@ namespace OutdoorSolution.Controllers
             return Ok(responsePage);
         }
 
-        public override async Task<IHttpActionResult> GetById(Guid id)
-        {
-            Wall wall = await db.Walls.FindAsync(id);
-            if (wall == null)
-            {
-                return NotFound();
-            }
-
-            var wallDto = wallMapper.CreateWallDto(wall, Url);
-
-            return Ok(wallDto);
-        }
-
         [Authorize]
-        public async Task<IHttpActionResult> PutWall(Guid id, [FromBody]WallDto wallDto)
-        {
-            var wall = await db.Walls.FindAsync(id);
-            if (wall == null)
-                return NotFound();
-
-            if (!this.permissionsService.CanUserModifyResource(User, wall))
-                return StatusCode(HttpStatusCode.Forbidden);
-
-            wallMapper.UpdateWall(wall, wallDto);
-            await db.SaveChangesAsync();
-
-            return StatusCode(HttpStatusCode.NoContent);
-        }
-
-        [Authorize]
-        public async Task<IHttpActionResult> PostWall(Guid areaId, [FromBody]WallDto wallDto)
+        public async Task<IHttpActionResult> Post(Guid areaId, [FromBody]WallDto wallDto)
         {
             var wall = wallMapper.CreateWall(wallDto);
             wall.AreaId = areaId;
-            
+
             db.Walls.Add(wall);
             await db.SaveChangesAsync();
 
             return CreatedAtRoute("DefaultApi", new { id = wall.Id }, wallMapper.CreateWallDto(wall, Url));
-        }
-
-        [Authorize]
-        public async Task<IHttpActionResult> DeleteWall(Guid id)
-        {
-            Wall wall = await db.Walls.FindAsync(id);
-            if (wall == null)
-            {
-                return NotFound();
-            }
-            if (!this.permissionsService.CanUserDeleteResource(User, wall))
-                return StatusCode(HttpStatusCode.Forbidden);
-
-            db.Walls.Remove(wall);
-            await db.SaveChangesAsync();
-
-            return StatusCode(HttpStatusCode.NoContent);
         }
 
         protected override Link GetPagingLink(PagingParams pagingParams)
@@ -118,6 +72,16 @@ namespace OutdoorSolution.Controllers
             else
                 //return Url.Link<WallsController>(c => c.Get(pagingParams));
                 return null;
+        }
+
+        protected override WallDto CreateDto(Wall resource)
+        {
+            return wallMapper.CreateWallDto(resource, Url);
+        }
+
+        protected override void Update(Wall resource, WallDto resourceDto)
+        {
+            wallMapper.UpdateWall(resource, resourceDto);
         }
     }
 }

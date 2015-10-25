@@ -11,9 +11,11 @@ namespace OutdoorSolution.Domain.Models.Infrastructure
     /// </summary>
     public interface IUserResource
     {
+        Guid Id { get; }
+
         /// <summary>
         /// An id of the user that created resource
         /// </summary>
-        string UserId { get; set; }
+        string UserId { get; }
     }
 }

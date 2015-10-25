@@ -24,7 +24,7 @@ namespace OutdoorSolution.Controllers
         private readonly AreaMapper areaMapper;
 
         public PreviewAreasController(ApplicationDbContext dbContext, AreaMapper areaMapper)
-            :base(dbContext, null)
+            :base(dbContext)
         {
             this.areaMapper = areaMapper;
         }

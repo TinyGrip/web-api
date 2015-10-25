@@ -17,12 +17,10 @@ namespace OutdoorSolution.Controllers
     public abstract class PagingController : ApiController
     {
         protected readonly ApplicationDbContext db;
-        protected readonly PermissionsService permissionsService;
 
-        public PagingController(ApplicationDbContext dbContext, PermissionsService permissionsService)
+        public PagingController(ApplicationDbContext dbContext)
         {
-            this.db = dbContext;
-            this.permissionsService = permissionsService;
+            this.db = dbContext; // TODO: think if not to move from here
         }
 
         public abstract Task<IHttpActionResult> GetById(Guid id);

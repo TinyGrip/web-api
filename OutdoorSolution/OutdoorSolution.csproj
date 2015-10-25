@@ -217,6 +217,7 @@
     <Compile Include="Controllers\Area\AreaImagesController.cs" />
     <Compile Include="Controllers\Area\AreasController.cs" />
     <Compile Include="Controllers\Area\PreviewAreasController.cs" />
+    <Compile Include="Controllers\ClimbingResourceController.cs" />
     <Compile Include="Controllers\PagingController.cs" />
     <Compile Include="Controllers\RootController.cs" />
     <Compile Include="Controllers\RoutesController.cs" />
