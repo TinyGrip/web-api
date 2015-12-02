@@ -345,18 +345,18 @@ namespace OutdoorSolution.Controllers
                 try
                 {
                     IdentityResult createResult = await UserManager.CreateAsync(user, model.Password);
-                    // add user to 'User' role by default
-                    IdentityResult addToRoleResult = await UserManager.AddToRoleAsync(user.Id, RoleNames.User);
-
                     if (!createResult.Succeeded)
                     {
                         dbContextTransaction.Rollback();
                         return GetErrorResult(createResult);
                     }
+
+                    // add user to 'User' role by default
+                    IdentityResult addToRoleResult = await UserManager.AddToRoleAsync(user.Id, RoleNames.User);
                     if (!addToRoleResult.Succeeded)
                     {
                         dbContextTransaction.Rollback();
-                        return InternalServerError();
+                        return GetErrorResult(addToRoleResult);
                     }
                         
                     dbContextTransaction.Commit();

@@ -16,12 +16,7 @@ namespace OutdoorSolution.Controllers
 {
     public abstract class PagingController : ApiController
     {
-        protected readonly ApplicationDbContext db;
-
-        public PagingController(ApplicationDbContext dbContext)
-        {
-            this.db = dbContext; // TODO: think if not to move from here
-        }
+        public IUnitOfWork UnitOfWork { get; set; }
 
         public abstract Task<IHttpActionResult> GetById(Guid id);
 
@@ -62,7 +57,7 @@ namespace OutdoorSolution.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                UnitOfWork.Dispose();
             }
             base.Dispose(disposing);
         }

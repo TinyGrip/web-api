@@ -4,10 +4,7 @@ using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 using OutdoorSolution.Dal;
 using OutdoorSolution.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using OutdoorSolution.Services.Interfaces;
 
 namespace OutdoorSolution.IoC.Installers
 {
@@ -19,12 +16,16 @@ namespace OutdoorSolution.IoC.Installers
                                       .InNamespace(@"OutdoorSolution.Mapping")
                                       .LifestyleTransient());
 
-            // TODO: think about lifestyle for services!
-            container.Register(Classes.FromAssemblyContaining<PermissionsService>().Pick().LifestyleSingleton());
-            
-            container.Register(Component.For<ApplicationDbContext>()
+            container.Register(Component.For<IUnitOfWork>()
+                                        .ImplementedBy<ApplicationDbContext>()
                                         .Properties(PropertyFilter.IgnoreAll)
-                                        .LifestyleTransient());
+                                        .LifestylePerWebRequest());
+
+            // TODO: think about lifestyle for services!
+            container.Register(Classes.FromAssemblyContaining<IService>()
+                                      .BasedOn<IService>()
+                                      .WithService.FromInterface()
+                                      .LifestyleTransient());
         }
     }
 }

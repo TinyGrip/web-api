@@ -1,68 +1,101 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.Description;
-using OutdoorSolution.Dal;
 using OutdoorSolution.Domain.Models;
 using OutdoorSolution.Dto;
-using OutdoorSolution.Mapping;
 using OutdoorSolution.Helpers;
 using OutdoorSolution.Dto.Infrastructure;
 using OutdoorSolution.Models;
-using OutdoorSolution.Services;
+using OutdoorSolution.Providers;
+using Microsoft.AspNet.Identity;
+using OutdoorSolution.Services.Interfaces;
 
 namespace OutdoorSolution.Controllers
 {
     public class WallsController : UserResourceController<Wall, WallDto>
     {
-        private readonly WallMapper wallMapper;
+        private readonly IWallService wallService;
         private Guid? parentAreaId;
 
-        public WallsController(ApplicationDbContext dbContext, PermissionsService permissionsService, WallMapper wallMapper)
-            : base(dbContext, permissionsService)
+        public WallsController(IWallService wallService)
         {
-            this.wallMapper = wallMapper;
+            this.wallService = wallService;
+            this.wallService.UserId = User.Identity.GetUserId();
+        }
+
+        public async override Task<IHttpActionResult> GetById(Guid id)
+        {
+            var route = await wallService.GetById(id);
+            return Ok(route);
         }
 
         public async Task<IHttpActionResult> Get(Guid areaId, [FromUri]PagingParams param) 
-        {
-            var q =  db.Walls.Where(w => w.AreaId == areaId);                        
-            param.TotalAmount = q.Count();
-
-            if (param.TotalAmount == 0)
-                return NotFound();
-
-            var walls = await q.OrderByDescending(a => a.Name)
-                               .Skip(param.Skip)
-                               .Take(param.Take)
-                               .ToListAsync();
-
+        {  
             this.parentAreaId = areaId;
+            var walls = await wallService.Get(areaId, param);
 
-            var wallsDtos = walls.Select(w => wallMapper.CreateWallDto(w, Url)).ToList();
-            walls = null;
-
-            var responsePage = CreatePage<WallDto>(wallsDtos, param);
+            var responsePage = CreatePage<WallDto>(walls, param);
             return Ok(responsePage);
         }
 
         [Authorize]
         public async Task<IHttpActionResult> Post(Guid areaId, [FromBody]WallDto wallDto)
         {
-            var wall = wallMapper.CreateWall(wallDto);
-            wall.AreaId = areaId;
+            var wallWrapper = wallService.Create(areaId, wallDto);
+            await UnitOfWork.SaveChangesAsync();
 
-            db.Walls.Add(wall);
-            await db.SaveChangesAsync();
+            var wall = wallWrapper.GetValue();
 
-            return CreatedAtRoute("DefaultApi", new { id = wall.Id }, wallMapper.CreateWallDto(wall, Url));
+            return Created(String.Empty, wall);
+        }
+
+        [Authorize]
+        public async Task<IHttpActionResult> Put(Guid id, [FromBody]WallDto wallDto)
+        {
+            await wallService.Update(id, wallDto);
+            await UnitOfWork.SaveChangesAsync();
+
+            return StatusCode(HttpStatusCode.NoContent);
+        }
+
+        [Authorize]
+        [Route("api/Walls/{wallId}/Image")]
+        public async Task<IHttpActionResult> PatchWallImage(Guid wallId)
+        {
+            if (!Request.Content.IsMimeMultipartContent())
+            {
+                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+            }
+
+            // read the form data
+            var provider = new MultipartImageStreamsProvider();
+            await Request.Content.ReadAsMultipartAsync(provider);
+
+            var imageContent = provider.Contents[0];
+            if (imageContent != null)
+            {
+                await wallService.UpdateImage(
+                    wallId,
+                    await imageContent.ReadAsStreamAsync(),
+                    ExtenstionsHelper.GetImageExtension(imageContent.Headers.ContentType.MediaType));
+            }
+            else
+                return BadRequest("No supported image format found");
+
+            // save updates
+            await UnitOfWork.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [Authorize]
+        public async Task<IHttpActionResult> Delete(Guid id)
+        {
+            await wallService.Delete(id);
+            await UnitOfWork.SaveChangesAsync();
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
         protected override Link GetPagingLink(PagingParams pagingParams)
@@ -72,16 +105,6 @@ namespace OutdoorSolution.Controllers
             else
                 //return Url.Link<WallsController>(c => c.Get(pagingParams));
                 return null;
-        }
-
-        protected override WallDto CreateDto(Wall resource)
-        {
-            return wallMapper.CreateWallDto(resource, Url);
-        }
-
-        protected override void Update(Wall resource, WallDto resourceDto)
-        {
-            wallMapper.UpdateWall(resource, resourceDto);
         }
     }
 }

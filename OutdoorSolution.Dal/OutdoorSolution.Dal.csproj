@@ -59,6 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationDbContext.cs" />
+    <Compile Include="IUnitOfWork.cs" />
     <Compile Include="Migrations\201504121006055_InitialCreate.cs" />
     <Compile Include="Migrations\201504121006055_InitialCreate.Designer.cs">
       <DependentUpon>201504121006055_InitialCreate.cs</DependentUpon>
@@ -82,6 +83,10 @@
     <Compile Include="Migrations\201510181342259_UserIdForResources.cs" />
     <Compile Include="Migrations\201510181342259_UserIdForResources.Designer.cs">
       <DependentUpon>201510181342259_UserIdForResources.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201512021910363_AreaImageUserId.cs" />
+    <Compile Include="Migrations\201512021910363_AreaImageUserId.Designer.cs">
+      <DependentUpon>201512021910363_AreaImageUserId.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -115,6 +120,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201510181342259_UserIdForResources.resx">
       <DependentUpon>201510181342259_UserIdForResources.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201512021910363_AreaImageUserId.resx">
+      <DependentUpon>201512021910363_AreaImageUserId.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

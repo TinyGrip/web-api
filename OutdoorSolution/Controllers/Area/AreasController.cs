@@ -1,87 +1,72 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
-using System.Linq;
+﻿using Microsoft.AspNet.Identity;
+using OutdoorSolution.Domain.Models;
+using OutdoorSolution.Dto;
+using OutdoorSolution.Dto.Infrastructure;
+using OutdoorSolution.Helpers;
+using OutdoorSolution.Models;
+using OutdoorSolution.Services.Interfaces;
+using System;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.Description;
-using OutdoorSolution.Domain.Models;
-using OutdoorSolution.Models;
-using OutdoorSolution.Dto;
-using OutdoorSolution.Dal;
-using OutdoorSolution.Mapping;
-using OutdoorSolution.Helpers;
-using OutdoorSolution.Dto.Infrastructure;
-using OutdoorSolution.Filters;
-using OutdoorSolution.Services;
 
 namespace OutdoorSolution.Controllers
 {
     public class AreasController : UserResourceController<Area, AreaDto>
     {
-        private readonly AreaMapper areaMapper;
+        private readonly IAreaService areaService;
 
-        public AreasController(ApplicationDbContext dbContext, AreaMapper areaMapper, PermissionsService permissionsService)
-            : base(dbContext, permissionsService)
+        public AreasController(IAreaService areaService)
         {
-            this.areaMapper = areaMapper;
+            this.areaService = areaService;
+            this.areaService.UserId = User.Identity.GetUserId();
+        }
+
+        public async override Task<IHttpActionResult> GetById(Guid id)
+        {
+            var route = await areaService.GetById(id);
+            return Ok(route);
         }
 
         public async Task<IHttpActionResult> Get([FromUri]PagingParams param)
         {
-            // TODO: check if to use eager loading!
-            param.TotalAmount = db.Areas.Count();
-            if (param.TotalAmount == 0)
-            {
-                return NotFound();
-            }
-
-            var areas = await db.Areas.OrderByDescending(a => a.Name)
-                                      .Skip(param.Skip)
-                                      .Take(param.Take)
-                                      .ToListAsync();
-
-            // TODO: think about memory
-            var areaDtos = areas.Select(a => CreateDto(a)).ToList();
-            areas = null;
-
-            var responsePage = CreatePage<AreaDto>(areaDtos, param);
+            var areas = await areaService.Get(param);
+            var responsePage = CreatePage<AreaDto>(areas, param);
             return Ok(responsePage);
         }
 
         [Authorize]
         public async Task<IHttpActionResult> PostArea(AreaDto areaDto)
         {
-            areaDto.Created = DateTime.Now;
+            var areaWrapper = areaService.Create(areaDto);
+            await UnitOfWork.SaveChangesAsync();
 
-            // create db model and save it
-            var area = areaMapper.CreateArea(areaDto);
-            db.Areas.Add(area);
-            await db.SaveChangesAsync();
+            var area = areaWrapper.GetValue();
 
-            // create dto model of saved area
-            areaDto = CreateDto(area);
+            return Created(String.Empty, areaDto);
+        }
 
-            return CreatedAtRoute("DefaultApi", new { id = area.Id }, areaDto);
+        [Authorize]
+        public async Task<IHttpActionResult> Put(Guid id, [FromBody]AreaDto areaDto)
+        {
+            await areaService.Update(id, areaDto);
+            await UnitOfWork.SaveChangesAsync();
+
+            return StatusCode(HttpStatusCode.NoContent);
+        }
+
+        [Authorize]
+        public async Task<IHttpActionResult> Delete(Guid id)
+        {
+            await areaService.Delete(id);
+            await UnitOfWork.SaveChangesAsync();
+
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
         protected override Link GetPagingLink(PagingParams pagingParams)
         {
             return Url.Link<AreasController>(c => c.Get(pagingParams));
-        }
-
-        protected override AreaDto CreateDto(Area resource)
-        {
-            return areaMapper.CreateAreaDto(resource, Url);
-        }
-
-        protected override void Update(Area resource, AreaDto resourceDto)
-        {
-            areaMapper.UpdateArea(resource, resourceDto);
         }
     }
 }

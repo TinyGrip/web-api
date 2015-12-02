@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Configuration;
+using OutdoorSolution.Dto.Infrastructure;
 
 namespace OutdoorSolution.Models
 {
     /// <summary>
     /// Url parameters, used for pagination
     /// </summary>
-    public class PagingParams
+    public class PagingParams : IPagingData
     {
         public PagingParams()
         {

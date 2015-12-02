@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OutdoorSolution.Common
+namespace OutdoorSolution.Services.Common
 {
-    // TODO: think if it should be here
-    public enum RouteType
+    public enum ResultCodes
     {
-        Boulder,
-        Route
+        OK,
+        AccessDenied,
+        ResourceNotFound
     }
 }

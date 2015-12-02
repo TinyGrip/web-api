@@ -17,6 +17,8 @@ namespace OutdoorSolution.Dto
 
         public GeographyDto Location { get; set; }
 
+        // ----- Links sections ------
+
         public Link Image { get; set; }
 
         public Link Area { get; set; }

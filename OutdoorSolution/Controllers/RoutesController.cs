@@ -1,83 +1,74 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.Description;
-using OutdoorSolution.Dal;
 using OutdoorSolution.Domain.Models;
-using OutdoorSolution.Mapping;
 using OutdoorSolution.Dto;
 using OutdoorSolution.Models;
 using OutdoorSolution.Helpers;
 using OutdoorSolution.Dto.Infrastructure;
-using OutdoorSolution.Services;
+using Microsoft.AspNet.Identity;
+using OutdoorSolution.Services.Interfaces;
 
 namespace OutdoorSolution.Controllers
 {
     public class RoutesController : UserResourceController<Route, RouteDto>
     {
-        private readonly RouteMapper routeMapper;
+        private readonly IRouteService routeService;
         private Guid wallId;
 
-        public RoutesController(ApplicationDbContext dbContext, PermissionsService permissionsService, RouteMapper routeMapService)
-            : base(dbContext, permissionsService)
+        public RoutesController(IRouteService routeService)
         {
-            this.routeMapper = routeMapService;
+            this.routeService = routeService;
+            this.routeService.UserId = User.Identity.GetUserId();
+        }
+
+        public async override Task<IHttpActionResult> GetById(Guid id)
+        {
+            var route = await routeService.GetById(id);
+            return Ok(route);
         }
 
         public async Task<IHttpActionResult> Get(Guid wallId, [FromUri]PagingParams param)
         {
-            var q = db.Routes.Where(x => x.WallId == wallId);
-            param.TotalAmount = q.Count();
-            if (param.TotalAmount == 0)
-            {
-                return NotFound();
-            }
-
-            var routes = await q.OrderByDescending(x => x.Name)
-                                      .Skip(param.Skip)
-                                      .Take(param.Take)
-                                      .ToListAsync();
-
             this.wallId = wallId;
-
-            var routesDto = routes.Select(x => routeMapper.CreateRouteDto(x, Url));
+            var routes = await routeService.Get(wallId, param);
             
-            var page = CreatePage(routesDto, param);
+            var page = CreatePage(routes, param);
             return Ok(page);
         }
 
         [Authorize]
         public async Task<IHttpActionResult> Post(Guid wallId, [FromBody]RouteDto routeDto)
         {
-            var route = routeMapper.CreateRoute(routeDto);
-            route.WallId = wallId;
+            this.wallId = wallId;
+            var routeWrapper = routeService.Create(wallId, routeDto);
+            await UnitOfWork.SaveChangesAsync();
 
-            db.Routes.Add(route);
-            await db.SaveChangesAsync();
+            var route = routeWrapper.GetValue();
 
-            return CreatedAtRoute("DefaultApi", new { id = route.Id }, routeDto);
+            return Created(String.Empty, route);
+        }
+
+        public async Task<IHttpActionResult> Put(Guid id, [FromBody]RouteDto routeDto)
+        {
+            await routeService.Update(id, routeDto);
+            await UnitOfWork.SaveChangesAsync();
+
+            return StatusCode(HttpStatusCode.NoContent);
+        }
+
+        [Authorize]
+        public async Task<IHttpActionResult> Delete(Guid id)
+        {
+            await routeService.Delete(id);
+            await UnitOfWork.SaveChangesAsync();
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
         protected override Link GetPagingLink(PagingParams pagingParams)
         {
             return Url.Link<RoutesController>(c => c.Get(wallId, pagingParams));
-        }
-
-        protected override RouteDto CreateDto(Route resource)
-        {
-            return routeMapper.CreateRouteDto(resource, Url);
-        }
-
-        protected override void Update(Route resource, RouteDto resourceDto)
-        {
-            routeMapper.UpdateRoute(resource, resourceDto);
         }
     }
 }

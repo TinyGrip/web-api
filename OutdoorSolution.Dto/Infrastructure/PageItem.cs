@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,9 @@ namespace OutdoorSolution.Dto.Infrastructure
 {
     public class PageItem
     {
+        [JsonIgnore]
+        public Guid Id { get; set; }
+
         public Link Self { get; set; }
 
         public Link Update { get; set; }

@@ -7,7 +7,10 @@ using System.Data.Entity;
 
 namespace OutdoorSolution.Dal
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    /// <summary>
+    /// Unit of work implmentation
+    /// </summary>
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IUnitOfWork
     {
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)

@@ -51,6 +51,7 @@
     <Compile Include="AreaImageDto.cs" />
     <Compile Include="GeographyDto.cs" />
     <Compile Include="Infrastructure\Enums.cs" />
+    <Compile Include="Infrastructure\IPagingParams.cs" />
     <Compile Include="Infrastructure\Link.cs" />
     <Compile Include="Infrastructure\Page.cs" />
     <Compile Include="Infrastructure\PageItem.cs" />

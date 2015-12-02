@@ -217,12 +217,13 @@
     <Compile Include="Controllers\Area\AreaImagesController.cs" />
     <Compile Include="Controllers\Area\AreasController.cs" />
     <Compile Include="Controllers\Area\PreviewAreasController.cs" />
-    <Compile Include="Controllers\ClimbingResourceController.cs" />
+    <Compile Include="Controllers\UserResourceController.cs" />
     <Compile Include="Controllers\PagingController.cs" />
     <Compile Include="Controllers\RootController.cs" />
     <Compile Include="Controllers\RoutesController.cs" />
     <Compile Include="Controllers\WallsController.cs" />
     <Compile Include="Filters\ValidateModelAttribute.cs" />
+    <Compile Include="Helpers\ExtenstionsHelper.cs" />
     <Compile Include="Helpers\UrlHelper.cs" />
     <Compile Include="IoC\Installers\ControllersInstaller.cs" />
     <Compile Include="IoC\Installers\ServicesInstaller.cs" />
@@ -241,6 +242,7 @@
     <Compile Include="Models\PagingParams.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
+    <Compile Include="Providers\MultipartImageFilesProvider.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>

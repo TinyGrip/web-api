@@ -1,20 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.Description;
 using OutdoorSolution.Dal;
-using OutdoorSolution.Domain.Models;    
-using OutdoorSolution.Mapping;
+using OutdoorSolution.Domain.Models;
 using OutdoorSolution.Dto;
-using OutdoorSolution.Helpers;
-using OutdoorSolution.Services;
+using OutdoorSolution.Services.Interfaces;
+using Microsoft.AspNet.Identity;
 
 namespace OutdoorSolution.Controllers
 {
@@ -23,79 +14,46 @@ namespace OutdoorSolution.Controllers
     {
         private const string AREA_IMAGE_ROUTE = "api/Areas/Images/{id}";
 
-        private readonly ApplicationDbContext db;
-        private readonly AreaMapper areaMapper;
-        private readonly PermissionsService permissionsService;
+        IAreaImageService aiService;
 
-        public AreaImagesController(ApplicationDbContext dbContenxt, AreaMapper areaMapper, PermissionsService permissionsService)
+        public AreaImagesController(IAreaImageService areaImageService)
         {
-            db = dbContenxt;
-            this.areaMapper = areaMapper;
-            this.permissionsService = permissionsService;
+            this.aiService = areaImageService;
+            this.aiService.UserId = User.Identity.GetUserId();
         }
+
+        public IUnitOfWork UnitOfWork { get; set; }
 
         [Route(AREA_IMAGE_ROUTE)]
         public async Task<IHttpActionResult> GetById(Guid id)
         {
-            AreaImage areaImage = await db.AreaImages.FindAsync(id);
-            if (areaImage == null)
-            {
-                return NotFound();
-            }
-
-            var areaImageDto = areaMapper.CreateAreaImageDto(areaImage);
-            return Ok(areaImageDto);
+            var areaImage = aiService.GetById(id);
+            return Ok(areaImage);
         }
 
         public async Task<IHttpActionResult> GetByAreaId(Guid areaId)
         {
-            var areaImages = await db.AreaImages.Where(ai => ai.AreaId == areaId).ToListAsync();
-            if (areaImages.Count == 0)
-            {
-                return NotFound();
-            }
-
-            var areaImagesDtos = areaImages.Select(ai => areaMapper.CreateAreaImageDto(ai));
-            areaImages = null; // ??
-
+            var areaImagesDtos = aiService.GetByArea(areaId);
             return Ok(areaImagesDtos);
         }
 
         [Authorize]
         public async Task<IHttpActionResult> PostAreaImage(Guid areaId, [FromBody]AreaImageDto areaImageDto)
         {
-            var area = await db.Areas.FindAsync(areaId);
-            if (area == null)
-            {
-                return NotFound(); // TODO: think if this response is proper
-            }
+            var areaImageWrapper = aiService.Create(areaId, areaImageDto);
 
-            var areaImage = areaMapper.CreateAreaImage(areaImageDto);
-            areaImage.AreaId = area.Id;
-            db.AreaImages.Add(areaImage);
+            await UnitOfWork.SaveChangesAsync();
 
-            await db.SaveChangesAsync();
-
-            areaImageDto = areaMapper.CreateAreaImageDto(areaImage);
-            // TODO: check the correctness of forming response in such way
-            return Created(Url.Link<AreaImagesController>(c => c.GetById(areaImage.Id)).Href, areaImageDto);
+            areaImageDto = areaImageWrapper.GetValue();
+            return Created(String.Empty, areaImageDto);
         }
 
         [Route(AREA_IMAGE_ROUTE)]
         [Authorize]
         public async Task<IHttpActionResult> DeleteAreaImage(Guid id)
         {
-            AreaImage areaImage = await db.AreaImages.FindAsync(id);
-            if (areaImage == null)
-            {
-                return NotFound();
-            }
-            if (!this.permissionsService.CanUserDeleteResource(User, areaImage))
-                return StatusCode(HttpStatusCode.Forbidden);
-
-            db.AreaImages.Remove(areaImage);
-            await db.SaveChangesAsync();
-
+            await aiService.Delete(id);
+            await UnitOfWork.SaveChangesAsync();
             return Ok();
         }
 
@@ -103,7 +61,7 @@ namespace OutdoorSolution.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                UnitOfWork.Dispose();
             }
             base.Dispose(disposing);
         }

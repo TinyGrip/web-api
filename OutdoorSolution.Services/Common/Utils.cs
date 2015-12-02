@@ -77,5 +77,10 @@ namespace OutdoorSolution.Services.Common
 
             return DbGeometry.FromText(wellKnownText.ToString());
         }
+
+        public static bool IsHttpUrl(string url)
+        {
+            return url.StartsWith("http://") || url.StartsWith("https://");
+        }
     }
 }

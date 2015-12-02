@@ -4,12 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OutdoorSolution.Common
+namespace OutdoorSolution.Services.Exceptions
 {
-    // TODO: think if it should be here
-    public enum RouteType
+    public class ObjectNotFoundException : Exception
     {
-        Boulder,
-        Route
     }
 }
