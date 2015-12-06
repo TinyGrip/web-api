@@ -17,7 +17,7 @@ namespace OutdoorSolution.Services.Interfaces
 
         Task<WallDto> GetById(Guid id);
 
-        Task<IEnumerable<WallDto>> Get(Guid areaId, IPagingData pagingData);
+        Task<List<WallDto>> Get(Guid areaId, IPagingData pagingData);
 
         ResourceWrapper<WallDto> Create(Guid areaId, WallDto wallDto);
 

@@ -64,11 +64,8 @@ namespace OutdoorSolution.Services
             return new AreaImageDto()
             {
                 Name = areaImage.Name,
-                Link = new Link()
-                {
-                    Href = new Uri(areaImage.Url),
-                    Templated = false
-                }
+                Link = new Link(),
+                Href = areaImage.Url
             };
         }
     }

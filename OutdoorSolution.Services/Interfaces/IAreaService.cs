@@ -16,9 +16,9 @@ namespace OutdoorSolution.Services.Interfaces
 
         Task<AreaDto> GetById(Guid id);
 
-        Task<IEnumerable<AreaDto>> Get(IPagingData pagingData);
+        Task<List<AreaDto>> Get(IPagingData pagingData);
 
-        Task<IEnumerable<AreaDto>> GetPreview(IPagingData pagingData);
+        Task<List<AreaDto>> GetPreview(IPagingData pagingData);
 
         ResourceWrapper<AreaDto> Create(AreaDto areaDto);
 

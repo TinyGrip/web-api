@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ using OutdoorSolution.Models;
 using OutdoorSolution.Providers;
 using Microsoft.AspNet.Identity;
 using OutdoorSolution.Services.Interfaces;
+using OutdoorSolution.Links;
 
 namespace OutdoorSolution.Controllers
 {
@@ -18,23 +20,27 @@ namespace OutdoorSolution.Controllers
     {
         private readonly IWallService wallService;
         private Guid? parentAreaId;
+        private readonly WallLinker wallLinker;
 
-        public WallsController(IWallService wallService)
+        public WallsController(IWallService wallService, WallLinker wallLinker)
         {
             this.wallService = wallService;
             this.wallService.UserId = User.Identity.GetUserId();
+            this.wallLinker = wallLinker;
         }
 
         public async override Task<IHttpActionResult> GetById(Guid id)
         {
-            var route = await wallService.GetById(id);
-            return Ok(route);
+            var wall = await wallService.GetById(id);
+            wallLinker.Linkify(wall, Url);
+            return Ok(wall);
         }
 
         public async Task<IHttpActionResult> Get(Guid areaId, [FromUri]PagingParams param) 
         {  
             this.parentAreaId = areaId;
             var walls = await wallService.Get(areaId, param);
+            wallLinker.Linkify(walls, Url);
 
             var responsePage = CreatePage<WallDto>(walls, param);
             return Ok(responsePage);
@@ -47,6 +53,7 @@ namespace OutdoorSolution.Controllers
             await UnitOfWork.SaveChangesAsync();
 
             var wall = wallWrapper.GetValue();
+            wallLinker.Linkify(wall, Url);
 
             return Created(String.Empty, wall);
         }
@@ -79,7 +86,7 @@ namespace OutdoorSolution.Controllers
                 await wallService.UpdateImage(
                     wallId,
                     await imageContent.ReadAsStreamAsync(),
-                    ExtenstionsHelper.GetImageExtension(imageContent.Headers.ContentType.MediaType));
+                    ImageHelper.GetImageExtension(imageContent.Headers.ContentType.MediaType));
             }
             else
                 return BadRequest("No supported image format found");

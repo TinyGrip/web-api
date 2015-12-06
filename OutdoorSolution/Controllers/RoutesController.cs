@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
 using OutdoorSolution.Domain.Models;
@@ -9,6 +10,7 @@ using OutdoorSolution.Helpers;
 using OutdoorSolution.Dto.Infrastructure;
 using Microsoft.AspNet.Identity;
 using OutdoorSolution.Services.Interfaces;
+using OutdoorSolution.Links;
 
 namespace OutdoorSolution.Controllers
 {
@@ -16,16 +18,19 @@ namespace OutdoorSolution.Controllers
     {
         private readonly IRouteService routeService;
         private Guid wallId;
+        private readonly RouteLinker routeLinker;
 
-        public RoutesController(IRouteService routeService)
+        public RoutesController(IRouteService routeService, RouteLinker routeLinker)
         {
             this.routeService = routeService;
             this.routeService.UserId = User.Identity.GetUserId();
+            this.routeLinker = routeLinker;
         }
 
         public async override Task<IHttpActionResult> GetById(Guid id)
         {
             var route = await routeService.GetById(id);
+            routeLinker.Linkify(route, Url);
             return Ok(route);
         }
 
@@ -33,6 +38,7 @@ namespace OutdoorSolution.Controllers
         {
             this.wallId = wallId;
             var routes = await routeService.Get(wallId, param);
+            routeLinker.Linkify(routes, Url);
             
             var page = CreatePage(routes, param);
             return Ok(page);
@@ -46,6 +52,7 @@ namespace OutdoorSolution.Controllers
             await UnitOfWork.SaveChangesAsync();
 
             var route = routeWrapper.GetValue();
+            routeLinker.Linkify(route, Url);
 
             return Created(String.Empty, route);
         }

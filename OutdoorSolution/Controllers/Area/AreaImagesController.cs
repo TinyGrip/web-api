@@ -27,13 +27,13 @@ namespace OutdoorSolution.Controllers
         [Route(AREA_IMAGE_ROUTE)]
         public async Task<IHttpActionResult> GetById(Guid id)
         {
-            var areaImage = aiService.GetById(id);
+            var areaImage = await aiService.GetById(id);
             return Ok(areaImage);
         }
 
         public async Task<IHttpActionResult> GetByAreaId(Guid areaId)
         {
-            var areaImagesDtos = aiService.GetByArea(areaId);
+            var areaImagesDtos = await aiService.GetByArea(areaId);
             return Ok(areaImagesDtos);
         }
 

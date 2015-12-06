@@ -12,10 +12,6 @@ namespace OutdoorSolution.IoC.Installers
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
-            container.Register(Classes.FromThisAssembly()
-                                      .InNamespace(@"OutdoorSolution.Mapping")
-                                      .LifestyleTransient());
-
             container.Register(Component.For<IUnitOfWork>()
                                         .ImplementedBy<ApplicationDbContext>()
                                         .Properties(PropertyFilter.IgnoreAll)

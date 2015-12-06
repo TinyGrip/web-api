@@ -26,13 +26,13 @@ namespace OutdoorSolution.Services
             return CreateRouteDto(route);
         }
 
-        public async Task<IEnumerable<RouteDto>> Get(Guid wallId, IPagingData pagingData)
+        public async Task<List<RouteDto>> Get(Guid wallId, IPagingData pagingData)
         {
             var q = unitOfWork.Routes.Where(x => x.WallId == wallId);
             pagingData.TotalAmount = q.Count();
             if (pagingData.TotalAmount == 0)
             {
-                return new RouteDto[0];
+                return new List<RouteDto>();
             }
 
             var routes = await q.OrderByDescending(x => x.Name)
@@ -40,7 +40,7 @@ namespace OutdoorSolution.Services
                                       .Take(pagingData.Take)
                                       .ToListAsync();
 
-            var routesDto = routes.Select(x => CreateRouteDto(x));
+            var routesDto = routes.Select(x => CreateRouteDto(x)).ToList();
 
             return routesDto;
         }
@@ -76,7 +76,8 @@ namespace OutdoorSolution.Services
                 Name = route.Name,
                 Type = route.Type,
                 Complexity = route.Complexity,
-                Path = Utils.ConvertDbGeometry(route.Path)
+                Path = Utils.ConvertDbGeometry(route.Path),
+                WallId = route.WallId
             };
 
             return routeDto;

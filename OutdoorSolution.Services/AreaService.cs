@@ -33,12 +33,12 @@ namespace OutdoorSolution.Services
             return CreateDto(area);
         }
 
-        public async Task<IEnumerable<AreaDto>> Get(IPagingData pagingData)
+        public async Task<List<AreaDto>> Get(IPagingData pagingData)
         {
             pagingData.TotalAmount = unitOfWork.Areas.Count();
             if (pagingData.TotalAmount == 0)
             {
-                return new AreaDto[0];
+                return new List<AreaDto>();
             }
 
             var areas = await unitOfWork.Areas.OrderByDescending(a => a.Name)
@@ -52,7 +52,7 @@ namespace OutdoorSolution.Services
             return areaDtos;
         }
 
-        public async Task<IEnumerable<AreaDto>> GetPreview(IPagingData pagingData)
+        public async Task<List<AreaDto>> GetPreview(IPagingData pagingData)
         {
             pagingData.TotalAmount = unitOfWork.Areas.Count();
             // create lighter request, by using preview model
@@ -112,6 +112,7 @@ namespace OutdoorSolution.Services
         {
             var areaDto = new AreaDto()
             {
+                Id = area.Id,
                 Name = area.Name,
                 Description = area.Description,
                 Created = area.Created,

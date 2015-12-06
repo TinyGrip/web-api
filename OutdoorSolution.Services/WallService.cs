@@ -30,20 +30,20 @@ namespace OutdoorSolution.Services
             return CreateWallDto(wall);
         }
 
-        public async Task<IEnumerable<WallDto>> Get(Guid areaId, IPagingData pagingData)
+        public async Task<List<WallDto>> Get(Guid areaId, IPagingData pagingData)
         {
             var q = unitOfWork.Walls.Where(w => w.AreaId == areaId);
             pagingData.TotalAmount = q.Count();
 
             if (pagingData.TotalAmount == 0)
-                return new WallDto[0];
+                return new List<WallDto>();
 
             var walls = await q.OrderByDescending(a => a.Name)
                                .Skip(pagingData.Skip)
                                .Take(pagingData.Take)
                                .ToListAsync();
 
-            var wallDtos = walls.Select(x => CreateWallDto(x));
+            var wallDtos = walls.Select(x => CreateWallDto(x)).ToList();
             return wallDtos;
         }
 
@@ -98,12 +98,9 @@ namespace OutdoorSolution.Services
         {
             var wallDto = new WallDto()
             {
+                Id = wall.Id,
                 Name = wall.Name,
-                Image = new Link()
-                {
-                    //Href = new Uri(wall.Image),
-                    Templated = false
-                },
+                AreaId = wall.AreaId,
                 ImageHref = wall.Image,
                 Location = Utils.CreateGeoDto(wall.Location)
             };

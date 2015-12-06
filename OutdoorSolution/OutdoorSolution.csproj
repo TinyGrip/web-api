@@ -223,9 +223,10 @@
     <Compile Include="Controllers\RoutesController.cs" />
     <Compile Include="Controllers\WallsController.cs" />
     <Compile Include="Filters\ValidateModelAttribute.cs" />
-    <Compile Include="Helpers\ExtenstionsHelper.cs" />
+    <Compile Include="Helpers\ImageHelper.cs" />
     <Compile Include="Helpers\UrlHelper.cs" />
     <Compile Include="IoC\Installers\ControllersInstaller.cs" />
+    <Compile Include="IoC\Installers\ThisAssemblyInstaller.cs" />
     <Compile Include="IoC\Installers\ServicesInstaller.cs" />
     <Compile Include="IoC\WindsorCompositionRoot.cs" />
     <Compile Include="IoC\WindsorControllerFactory.cs" />
@@ -234,9 +235,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Mapping\AreaMapper.cs" />
-    <Compile Include="Mapping\RouteMapper.cs" />
-    <Compile Include="Mapping\WallMapper.cs" />
+    <Compile Include="Links\AreaLinker.cs" />
+    <Compile Include="Links\RouteLinker.cs" />
+    <Compile Include="Links\WallLinker.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\PagingParams.cs" />

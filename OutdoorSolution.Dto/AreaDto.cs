@@ -35,6 +35,8 @@ namespace OutdoorSolution.Dto
 
         public IEnumerable<RouteDto> PreviewRoutes { get; set; }
 
+        // --------------- Links section -----------------
+
         public Link Walls { get; set; }
 
         public Link AddWall { get; set; }

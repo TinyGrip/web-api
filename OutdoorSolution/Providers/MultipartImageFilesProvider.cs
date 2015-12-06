@@ -25,7 +25,7 @@ namespace OutdoorSolution.Providers
             if (String.IsNullOrEmpty(headers.ContentDisposition.FileName)) return base.GetStream(parent, headers);
             
             // restrict what filetypes can be uploaded
-            if (ExtenstionsHelper.IsImageTypeSupported(headers.ContentType.MediaType) && parsedImagesCount < MaxImagesAmount)
+            if (ImageHelper.IsImageTypeSupported(headers.ContentType.MediaType) && parsedImagesCount < MaxImagesAmount)
             {
                 ++parsedImagesCount;
                 return base.GetStream(parent, headers);

@@ -1,10 +1,8 @@
-﻿using OutdoorSolution.Common;
+﻿using Newtonsoft.Json;
+using OutdoorSolution.Common;
 using OutdoorSolution.Dto.Infrastructure;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OutdoorSolution.Dto
 {
@@ -17,6 +15,9 @@ namespace OutdoorSolution.Dto
         public double Complexity { get; set; }
 
         public RouteType Type { get; set; }
+
+        [JsonIgnore]
+        public Guid WallId { get; set; }
 
         public Link Wall { get; set; }
     }

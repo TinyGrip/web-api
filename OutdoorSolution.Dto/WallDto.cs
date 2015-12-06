@@ -1,10 +1,7 @@
-﻿using OutdoorSolution.Dto.Infrastructure;
+﻿using Newtonsoft.Json;
+using OutdoorSolution.Dto.Infrastructure;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OutdoorSolution.Dto
 {
@@ -16,6 +13,9 @@ namespace OutdoorSolution.Dto
         public string ImageHref { get; set; }
 
         public GeographyDto Location { get; set; }
+
+        [JsonIgnore]
+        public Guid AreaId { get; set; }
 
         // ----- Links sections ------
 

@@ -3,9 +3,11 @@ using OutdoorSolution.Domain.Models;
 using OutdoorSolution.Dto;
 using OutdoorSolution.Dto.Infrastructure;
 using OutdoorSolution.Helpers;
+using OutdoorSolution.Links;
 using OutdoorSolution.Models;
 using OutdoorSolution.Services.Interfaces;
 using System;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -15,22 +17,27 @@ namespace OutdoorSolution.Controllers
     public class AreasController : UserResourceController<Area, AreaDto>
     {
         private readonly IAreaService areaService;
+        private readonly AreaLinker areaLinker;
 
-        public AreasController(IAreaService areaService)
+        public AreasController(IAreaService areaService, AreaLinker areaLinker)
         {
             this.areaService = areaService;
             this.areaService.UserId = User.Identity.GetUserId();
+            this.areaLinker = areaLinker;
         }
 
         public async override Task<IHttpActionResult> GetById(Guid id)
         {
-            var route = await areaService.GetById(id);
-            return Ok(route);
+            var area = await areaService.GetById(id);
+            areaLinker.Linkify(area, Url);
+            return Ok(area);
         }
 
         public async Task<IHttpActionResult> Get([FromUri]PagingParams param)
         {
             var areas = await areaService.Get(param);
+            areaLinker.Linkify(areas, Url);
+
             var responsePage = CreatePage<AreaDto>(areas, param);
             return Ok(responsePage);
         }
@@ -42,6 +49,7 @@ namespace OutdoorSolution.Controllers
             await UnitOfWork.SaveChangesAsync();
 
             var area = areaWrapper.GetValue();
+            areaLinker.Linkify(area, Url);
 
             return Created(String.Empty, areaDto);
         }
