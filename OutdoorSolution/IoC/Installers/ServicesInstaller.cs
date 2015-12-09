@@ -12,7 +12,7 @@ namespace OutdoorSolution.IoC.Installers
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
-            container.Register(Component.For<IUnitOfWork>()
+            container.Register(Component.For<IUnitOfWork, ApplicationDbContext>()
                                         .ImplementedBy<ApplicationDbContext>()
                                         .Properties(PropertyFilter.IgnoreAll)
                                         .LifestylePerWebRequest());
@@ -21,7 +21,7 @@ namespace OutdoorSolution.IoC.Installers
             container.Register(Classes.FromAssemblyContaining<IService>()
                                       .BasedOn<IService>()
                                       .WithService.FromInterface()
-                                      .LifestyleTransient());
+                                      .LifestylePerWebRequest());
         }
     }
 }

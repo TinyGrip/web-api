@@ -4,12 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OutdoorSolution.Services.Interfaces
+namespace OutdoorSolution.Services.Exceptions
 {
-    /// <summary>
-    /// Makers for DI
-    /// </summary>
-    public interface IService
+    public class UserIsNullException : Exception
     {
     }
 }

@@ -16,8 +16,8 @@ namespace OutdoorSolution.Services
 {
     public class AreaImageService : UserResourceService<AreaImage>, IAreaImageService
     {
-        public AreaImageService(IUnitOfWork unitOfWork, IPermissionService permissionService)
-            : base(unitOfWork, permissionService)
+        public AreaImageService(IUnitOfWork unitOfWork, TGUserManager userManager)
+            : base(unitOfWork, userManager)
         {
         }
 
@@ -37,11 +37,15 @@ namespace OutdoorSolution.Services
 
         public ResourceWrapper<AreaImageDto> Create(Guid areaId, AreaImageDto areaImageDto)
         {
+            if (UserId == null)
+                throw new UserIsNullException();
+
             var areaImage = CreateAreaImage(areaImageDto);
+            areaImage.UserId = UserId;
             areaImage.AreaId = areaId;
             unitOfWork.AreaImages.Add(areaImage);
 
-            return new ResourceWrapper<AreaImageDto>(() => AreaImageService.CreateAreaImageDto(areaImage));
+            return new ResourceWrapper<AreaImageDto>( () => Task.FromResult(CreateAreaImageDto(areaImage)) );
         }
 
         public async Task Delete(Guid id)

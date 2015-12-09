@@ -14,7 +14,7 @@ using System.Web.Http;
 
 namespace OutdoorSolution.Controllers
 {
-    public class AreasController : UserResourceController<Area, AreaDto>
+    public class AreasController : UserResourceController
     {
         private readonly IAreaService areaService;
         private readonly AreaLinker areaLinker;
@@ -48,10 +48,10 @@ namespace OutdoorSolution.Controllers
             var areaWrapper = areaService.Create(areaDto);
             await UnitOfWork.SaveChangesAsync();
 
-            var area = areaWrapper.GetValue();
+            var area = await areaWrapper.GetValue();
             areaLinker.Linkify(area, Url);
 
-            return Created(String.Empty, areaDto);
+            return Created(area.Self.Href, areaDto);
         }
 
         [Authorize]
@@ -75,6 +75,11 @@ namespace OutdoorSolution.Controllers
         protected override Link GetPagingLink(PagingParams pagingParams)
         {
             return Url.Link<AreasController>(c => c.Get(pagingParams));
+        }
+
+        public override void InitUser(string userId)
+        {
+            this.areaService.UserId = userId;
         }
     }
 }

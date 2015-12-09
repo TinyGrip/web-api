@@ -78,9 +78,30 @@ namespace OutdoorSolution.Services.Common
             return DbGeometry.FromText(wellKnownText.ToString());
         }
 
+        /// <summary>
+        /// Checkes whether passed path is a web URL
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
         public static bool IsHttpUrl(string url)
         {
             return url.StartsWith("http://") || url.StartsWith("https://");
+        }
+
+        /// <summary>
+        /// Executes collection of tasks sequentially 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="tasks"></param>
+        /// <returns></returns>
+        public static async Task<List<T>> WhenAllSeq<T>(IEnumerable<Task<T>> tasks)
+        {
+            var results = new List<T>();
+            foreach (var task in tasks)
+            {
+                results.Add(await task);
+            }
+            return results;
         }
     }
 }

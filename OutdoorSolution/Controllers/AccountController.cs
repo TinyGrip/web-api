@@ -9,7 +9,6 @@ using System.Web.Http;
 using System.Web.Http.ModelBinding;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
@@ -18,6 +17,7 @@ using OutdoorSolution.Providers;
 using OutdoorSolution.Results;
 using OutdoorSolution.Domain.Models;
 using OutdoorSolution.Dal;
+using OutdoorSolution.Services;
 
 namespace OutdoorSolution.Controllers
 {
@@ -26,38 +26,23 @@ namespace OutdoorSolution.Controllers
     public class AccountController : ApiController
     {
         private const string LocalLoginProvider = "Local";
-        private ApplicationUserManager _userManager;
+        private TGUserManager _userManager;
+        private readonly IUnitOfWork unitOfWork;
 
-        public AccountController()
+        public AccountController(IUnitOfWork unitOfWork, TGUserManager userManager)
         {
+            this.unitOfWork = unitOfWork;
+            UserManager = userManager;
         }
 
-        public AccountController(ApplicationUserManager userManager,
+        public AccountController(TGUserManager userManager,
             ISecureDataFormat<AuthenticationTicket> accessTokenFormat)
         {
             UserManager = userManager;
             AccessTokenFormat = accessTokenFormat;
         }
 
-        public ApplicationUserManager UserManager
-        {
-            get
-            {
-                return _userManager ?? Request.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            }
-            private set
-            {
-                _userManager = value;
-            }
-        }
-
-        private ApplicationDbContext DbContext
-        {
-            get
-            {
-                return Request.GetOwinContext().Get<ApplicationDbContext>();
-            }
-        }
+        public TGUserManager UserManager { get; private set; }
 
         public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; private set; }
 
@@ -340,7 +325,7 @@ namespace OutdoorSolution.Controllers
 
             var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
             
-            using (var dbContextTransaction = DbContext.Database.BeginTransaction())
+            using (var dbContextTransaction = unitOfWork.Database.BeginTransaction())
             {
                 try
                 {

@@ -1,6 +1,7 @@
 ﻿using OutdoorSolution.Domain.Models;
 using OutdoorSolution.Dto;
 using OutdoorSolution.Dto.Infrastructure;
+using OutdoorSolution.Services.Common;
 using OutdoorSolution.Services.Results;
 using System;
 using System.Collections.Generic;
@@ -11,10 +12,8 @@ using System.Threading.Tasks;
 
 namespace OutdoorSolution.Services.Interfaces
 {
-    public interface IWallService : IService
+    public interface IWallService : IUserResourceService, IService
     {
-        string UserId { get; set; }
-
         Task<WallDto> GetById(Guid id);
 
         Task<List<WallDto>> Get(Guid areaId, IPagingData pagingData);
@@ -26,5 +25,7 @@ namespace OutdoorSolution.Services.Interfaces
         Task UpdateImage(Guid wallId, Stream imageStream, string fileExtension);
 
         Task Delete(Guid id);
+
+        Task<bool> CanUserAccessResource(Guid resourceId, PermissionType permission);
     }
 }

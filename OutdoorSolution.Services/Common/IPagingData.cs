@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OutdoorSolution.Dto.Infrastructure
+namespace OutdoorSolution.Services.Common
 {
     /// <summary>
     /// Pagination data

@@ -18,19 +18,21 @@ namespace OutdoorSolution.Services
 {
     public class AreaService : UserResourceService<Area>, IAreaService
     {
-        private const int PREVIEW_ITEMS_COUNT = 3;
         IWallService wallService;
+        IRouteService routeService;
+        private const int PREVIEW_ITEMS_COUNT = 3;
 
-        public AreaService(IUnitOfWork unitOfWork, IPermissionService permissionsService, IWallService wallService)
-            : base(unitOfWork, permissionsService)
+        public AreaService(IUnitOfWork unitOfWork, TGUserManager userManager, IWallService wallService, IRouteService routeService)
+            : base(unitOfWork, userManager)
         {
             this.wallService = wallService;
+            this.routeService = routeService;
         }
 
         public async Task<AreaDto> GetById(Guid id)
         {
             var area = await GetResource(id, PermissionType.Read);
-            return CreateDto(area);
+            return await CreateDto(area);
         }
 
         public async Task<List<AreaDto>> Get(IPagingData pagingData)
@@ -47,8 +49,7 @@ namespace OutdoorSolution.Services
                                       .ToListAsync();
 
             // TODO: think about memory
-            var areaDtos = areas.Select(a => CreateDto(a)).ToList();
-
+            var areaDtos = await Utils.WhenAllSeq(areas.Select(a => CreateDto(a)));
             return areaDtos;
         }
 
@@ -75,17 +76,21 @@ namespace OutdoorSolution.Services
 
         public ResourceWrapper<AreaDto> Create(AreaDto areaDto)
         {
+            if (UserId == null)
+                throw new UserIsNullException();
+
             var area = new Area();
 
             // create db model and save it
             UpdateArea(area, areaDto);
             area.Created = DateTime.UtcNow;
+            area.UserId = UserId;
             if (areaDto.Images != null)
-                area.Images = areaDto.Images.Select(x => AreaImageService.CreateAreaImage(x)).ToList();
+                area.Images = areaDto.Images.Select(x => AreaImageService.CreateAreaImage(x)).ToList(); // TODO: check user ID
 
             unitOfWork.Areas.Add(area);
 
-            return new ResourceWrapper<AreaDto>(() => AreaService.CreateDto(area));
+            return new ResourceWrapper<AreaDto>(() => CreateDto(area));
         }
 
         public async Task Update(Guid id, AreaDto areaDto)
@@ -108,7 +113,7 @@ namespace OutdoorSolution.Services
             unitOfWork.Areas.Remove(area);
         }
 
-        internal static AreaDto CreateDto(Area area)
+        private async Task<AreaDto> CreateDto(Area area)
         {
             var areaDto = new AreaDto()
             {
@@ -118,35 +123,32 @@ namespace OutdoorSolution.Services
                 Created = area.Created,
                 Rating = area.Rating,
                 RatingsCount = area.RatingsCount,
+                // get area images from service also
                 Images = area.Images.Select(x => AreaImageService.CreateAreaImageDto(x)).ToList()
             };
 
+            await SetPermissions(areaDto, area);
             areaDto.Location = Utils.CreateGeoDto(area.Location);
 
             // add previews
-            areaDto.PreviewWalls = area.Walls.OrderBy(x => x.Name)
-                                             .Take(PREVIEW_ITEMS_COUNT)
-                                             .ToList()
-                                             .Select(w => WallService.CreateWallDto(w))
-                                             .ToList();
-
-            // TODO: debug requests to DB
-            areaDto.PreviewRoutes = area.Walls.SelectMany(w => w.Routes)
-                                              .OrderBy(r => r.Complexity)
-                                              .Take(PREVIEW_ITEMS_COUNT)
-                                              .ToList()
-                                              .Select(r => RouteService.CreateRouteDto(r))
-                                              .ToList();
+            var pagingData = new PagingData()
+            {
+                Take = PREVIEW_ITEMS_COUNT
+            };
+            areaDto.PreviewWalls = await wallService.Get(area.Id, pagingData);
+            areaDto.PreviewRoutes = await routeService.GetByArea(area.Id, pagingData);
 
             return areaDto;
         }
 
-        internal static AreaDto CreatePreviewAreaDto(PreviewArea area)
+        private static AreaDto CreatePreviewAreaDto(PreviewArea area)
         {
             var areaDto = new AreaDto()
             {
+                Id = area.Id,
                 Name = area.Name,
-                Rating = area.Rating
+                Rating = area.Rating,
+
             };
 
             areaDto.Location = Utils.CreateGeoDto(area.Location);

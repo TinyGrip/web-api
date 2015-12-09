@@ -11,6 +11,8 @@ namespace OutdoorSolution.Dal
 {
     public interface IUnitOfWork : IDisposable
     {
+        Database Database { get; }
+
         DbSet<Area> Areas { get; set; }
 
         DbSet<Wall> Walls { get; set; }

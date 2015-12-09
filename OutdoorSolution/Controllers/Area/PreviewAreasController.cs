@@ -5,21 +5,25 @@ using OutdoorSolution.Models;
 using OutdoorSolution.Dto;
 using OutdoorSolution.Helpers;
 using OutdoorSolution.Services.Interfaces;
+using OutdoorSolution.Links;
 
 namespace OutdoorSolution.Controllers
 {
     public class PreviewAreasController : PagingController
     {
         private IAreaService areaService;
+        private AreaLinker areaLinker;
 
-        public PreviewAreasController(IAreaService areaService)
+        public PreviewAreasController(IAreaService areaService, AreaLinker areaLinker)
         {
             this.areaService = areaService;
+            this.areaLinker = areaLinker;
         }
 
         public async Task<IHttpActionResult> Get([FromUri]PagingParams param)
         {
             var areas = await areaService.GetPreview(param);
+            areaLinker.LinkifyPreview(areas, Url);
             var responsePage = CreatePage<AreaDto>(areas, param);
             return Ok(responsePage);
         }

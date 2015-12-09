@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 namespace OutdoorSolution.Services.Interfaces
 {
     /// <summary>
-    /// Makers for DI
+    /// Base interface for all services, that are working with user-created resources
     /// </summary>
-    public interface IService
+    public interface IUserResourceService
     {
+        string UserId { get; set; }
     }
 }

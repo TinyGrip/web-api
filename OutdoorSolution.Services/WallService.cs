@@ -11,6 +11,7 @@ using OutdoorSolution.Services.Common;
 using System.IO;
 using OutdoorSolution.Services.Results;
 using OutdoorSolution.Services.Interfaces;
+using OutdoorSolution.Services.Exceptions;
 
 namespace OutdoorSolution.Services
 {
@@ -18,8 +19,8 @@ namespace OutdoorSolution.Services
     {
         private readonly IFileSystemService fsService;
 
-        public WallService(IUnitOfWork unitOfWork, IFileSystemService fsService, IPermissionService permissionsService):
-            base(unitOfWork, permissionsService)
+        public WallService(IUnitOfWork unitOfWork, IFileSystemService fsService, TGUserManager userManager) :
+            base(unitOfWork, userManager)
         {
             this.fsService = fsService;
         }
@@ -27,7 +28,7 @@ namespace OutdoorSolution.Services
         public async Task<WallDto> GetById(Guid id)
         {
             var wall = await GetResource(id, PermissionType.Read);
-            return CreateWallDto(wall);
+            return await CreateWallDto(wall);
         }
 
         public async Task<List<WallDto>> Get(Guid areaId, IPagingData pagingData)
@@ -43,12 +44,15 @@ namespace OutdoorSolution.Services
                                .Take(pagingData.Take)
                                .ToListAsync();
 
-            var wallDtos = walls.Select(x => CreateWallDto(x)).ToList();
+            var wallDtos = await Utils.WhenAllSeq(walls.Select(x => CreateWallDto(x)));
             return wallDtos;
         }
 
         public ResourceWrapper<WallDto> Create(Guid areaId, WallDto wallDto)
         {
+            if (UserId == null)
+                throw new UserIsNullException();
+
             var wall = new Wall();
             UpdateWall(wall, wallDto);
             wall.AreaId = areaId;
@@ -56,7 +60,7 @@ namespace OutdoorSolution.Services
             
             unitOfWork.Walls.Add(wall);
 
-            return new ResourceWrapper<WallDto>(() => WallService.CreateWallDto(wall));
+            return new ResourceWrapper<WallDto>( () => CreateWallDto(wall) );
         }
 
         public async Task Update(Guid id, WallDto wallDto)
@@ -94,7 +98,7 @@ namespace OutdoorSolution.Services
             unitOfWork.Walls.Remove(wall);
         }
 
-        internal static WallDto CreateWallDto(Wall wall)
+        private async Task<WallDto> CreateWallDto(Wall wall)
         {
             var wallDto = new WallDto()
             {
@@ -104,6 +108,8 @@ namespace OutdoorSolution.Services
                 ImageHref = wall.Image,
                 Location = Utils.CreateGeoDto(wall.Location)
             };
+
+            await SetPermissions(wallDto, wall);
 
             return wallDto;
         }

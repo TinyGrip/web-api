@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -16,7 +15,7 @@ using OutdoorSolution.Links;
 
 namespace OutdoorSolution.Controllers
 {
-    public class WallsController : UserResourceController<Wall, WallDto>
+    public class WallsController : UserResourceController
     {
         private readonly IWallService wallService;
         private Guid? parentAreaId;
@@ -25,7 +24,6 @@ namespace OutdoorSolution.Controllers
         public WallsController(IWallService wallService, WallLinker wallLinker)
         {
             this.wallService = wallService;
-            this.wallService.UserId = User.Identity.GetUserId();
             this.wallLinker = wallLinker;
         }
 
@@ -52,10 +50,10 @@ namespace OutdoorSolution.Controllers
             var wallWrapper = wallService.Create(areaId, wallDto);
             await UnitOfWork.SaveChangesAsync();
 
-            var wall = wallWrapper.GetValue();
+            var wall = await wallWrapper.GetValue();
             wallLinker.Linkify(wall, Url);
 
-            return Created(String.Empty, wall);
+            return Created(wall.Self.Href, wall);
         }
 
         [Authorize]
@@ -112,6 +110,11 @@ namespace OutdoorSolution.Controllers
             else
                 //return Url.Link<WallsController>(c => c.Get(pagingParams));
                 return null;
+        }
+
+        public override void InitUser(string userId)
+        {
+            this.wallService.UserId = userId;
         }
     }
 }

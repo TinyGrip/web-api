@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace OutdoorSolution.Dto
 {
-    public class AreaImageDto: PageItem
+    public class AreaImageDto : UserResourceDto
     {
         public string Name { get; set; }
 

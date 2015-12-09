@@ -14,7 +14,7 @@ using OutdoorSolution.Links;
 
 namespace OutdoorSolution.Controllers
 {
-    public class RoutesController : UserResourceController<Route, RouteDto>
+    public class RoutesController : UserResourceController
     {
         private readonly IRouteService routeService;
         private Guid wallId;
@@ -51,10 +51,10 @@ namespace OutdoorSolution.Controllers
             var routeWrapper = routeService.Create(wallId, routeDto);
             await UnitOfWork.SaveChangesAsync();
 
-            var route = routeWrapper.GetValue();
+            var route = await routeWrapper.GetValue();
             routeLinker.Linkify(route, Url);
 
-            return Created(String.Empty, route);
+            return Created(route.Self.Href, route);
         }
 
         public async Task<IHttpActionResult> Put(Guid id, [FromBody]RouteDto routeDto)
@@ -76,6 +76,11 @@ namespace OutdoorSolution.Controllers
         protected override Link GetPagingLink(PagingParams pagingParams)
         {
             return Url.Link<RoutesController>(c => c.Get(wallId, pagingParams));
+        }
+
+        public override void InitUser(string userId)
+        {
+            this.routeService.UserId = userId;
         }
     }
 }

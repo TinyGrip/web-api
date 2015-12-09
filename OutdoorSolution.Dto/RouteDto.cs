@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace OutdoorSolution.Dto
 {
-    public class RouteDto : PageItem
+    public class RouteDto : UserResourceDto
     {
         public string Name { get; set; }
 

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace OutdoorSolution.Dto
 {
-    public class AreaDto : PageItem
+    public class AreaDto : UserResourceDto
     {
         public AreaDto()
         {
@@ -21,7 +21,7 @@ namespace OutdoorSolution.Dto
         [MaxLength(32768)]
         public string Description { get; set; }
 
-        public DateTime Created { get; set; }
+        public DateTime? Created { get; set; }
 
         public double Rating { get; set; }
 

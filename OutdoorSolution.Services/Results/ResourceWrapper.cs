@@ -10,14 +10,14 @@ namespace OutdoorSolution.Services.Results
 {
     public class ResourceWrapper<T> where T: PageItem
     {
-        private Func<T> dtoCreator;
+        private Func<Task<T>> dtoCreator;
 
-        public ResourceWrapper(Func<T> dtoCreator)
+        public ResourceWrapper(Func<Task<T>> dtoCreator)
         {
             this.dtoCreator = dtoCreator;
         }
 
-        public T GetValue()
+        public Task<T> GetValue()
         {
             return dtoCreator();
         }

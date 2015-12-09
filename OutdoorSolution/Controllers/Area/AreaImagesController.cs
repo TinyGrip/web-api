@@ -10,7 +10,7 @@ using Microsoft.AspNet.Identity;
 namespace OutdoorSolution.Controllers
 {
     [Route("api/Areas/{areaId}/Images")]
-    public class AreaImagesController : ApiController
+    public class AreaImagesController : UserResourceController
     {
         private const string AREA_IMAGE_ROUTE = "api/Areas/Images/{id}";
 
@@ -22,10 +22,8 @@ namespace OutdoorSolution.Controllers
             this.aiService.UserId = User.Identity.GetUserId();
         }
 
-        public IUnitOfWork UnitOfWork { get; set; }
-
         [Route(AREA_IMAGE_ROUTE)]
-        public async Task<IHttpActionResult> GetById(Guid id)
+        public async override Task<IHttpActionResult> GetById(Guid id)
         {
             var areaImage = await aiService.GetById(id);
             return Ok(areaImage);
@@ -44,7 +42,7 @@ namespace OutdoorSolution.Controllers
 
             await UnitOfWork.SaveChangesAsync();
 
-            areaImageDto = areaImageWrapper.GetValue();
+            areaImageDto = await areaImageWrapper.GetValue();
             return Created(String.Empty, areaImageDto);
         }
 
@@ -64,6 +62,16 @@ namespace OutdoorSolution.Controllers
                 UnitOfWork.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        public override void InitUser(string userId)
+        {
+            this.aiService.UserId = userId;
+        }
+
+        protected override Dto.Infrastructure.Link GetPagingLink(Models.PagingParams pagingParams)
+        {
+            throw new NotImplementedException();
         }
     }
 }
