@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using OutdoorSolution.Helpers;
 using OutdoorSolution.Dto.Infrastructure;
+using Microsoft.AspNet.Identity;
 
 namespace OutdoorSolution.Controllers
 {
@@ -23,6 +20,10 @@ namespace OutdoorSolution.Controllers
             // TODO: use commented, when link generation is improved 
             if (User.Identity.IsAuthenticated)
             {
+                var userId = new Guid(User.Identity.GetUserId());
+                nodes.Add( "UserInfo", Url.Link<UserInfoController>(c => c.GetById(userId)) );
+                
+                accountNodes.Add("ChangePassword", Url.GetSpecialResource("/api/Account/ChangePassword"));
                 //accountNodes.Add( "Logout", Url.Link<AccountController>(c => c.Logout()) );
                 accountNodes.Add("Logout", Url.GetSpecialResource("/api/Account/Logout"));
             }

@@ -13,10 +13,10 @@ using System.Web.Http;
 
 namespace OutdoorSolution.Controllers
 {
+    [Authorize]
     public class UserInfoController : ApiController
     {
         private readonly IUserInfoService userInfoService;
-        private Guid? parentAreaId;
         private readonly UserInfoLinker userInfoLinker;
         private readonly IUnitOfWork unitOfWork;
 
@@ -34,7 +34,6 @@ namespace OutdoorSolution.Controllers
             return Ok(userInfo);
         }
 
-        [Authorize]
         public async Task<IHttpActionResult> Put(Guid id, [FromBody]UserInfoDto user)
         {
             await userInfoService.Update(id, user);
@@ -43,7 +42,6 @@ namespace OutdoorSolution.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        [Authorize]
         [Route("api/UserInfo/{userId}/Image")]
         public async Task<IHttpActionResult> PatchImage(Guid userId, UserImageTypes type)
         {

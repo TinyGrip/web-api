@@ -39,6 +39,11 @@ namespace OutdoorSolution.Links
 
             userInfo.UploadAvatarImage = urlHelper.Link<UserInfoController>(c => c.PatchImage(userInfo.Id, UserImageTypes.Avatar));
             userInfo.UploadCoverImage = urlHelper.Link<UserInfoController>(c => c.PatchImage(userInfo.Id, UserImageTypes.Cover));
+
+            // TODO: remove this and use upper ones when link generation is fixed
+            userInfo.UploadAvatarImage = urlHelper.GetSpecialResource("/api/UserInfo/" + userInfo.Id + "/Image?type=Avatar");
+            userInfo.UploadCoverImage = urlHelper.GetSpecialResource("/api/UserInfo/" + userInfo.Id + "/Image?type=Cover");
+
             userInfo.Self = urlHelper.Link<UserInfoController>(c => c.GetById(userInfo.Id));
         }
     }
