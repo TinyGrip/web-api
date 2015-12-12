@@ -14,7 +14,7 @@ namespace OutdoorSolution.Links
     /// <summary>
     /// Creates hypermedia link on wall dto object
     /// </summary>
-    public class WallLinker
+    public class WallLinker : ILinker
     {
         readonly IWallService wallService;
 
@@ -28,6 +28,7 @@ namespace OutdoorSolution.Links
             wall.Self = urlHelper.Link<WallsController>(c => c.GetById(wall.Id));
             wall.Area = urlHelper.Link<AreasController>(c => c.GetById(wall.AreaId));
             wall.Routes = urlHelper.Link<RoutesController>(c => c.Get(wall.Id, null));
+            wall.UploadImage = urlHelper.Link<WallsController>(c => c.PatchWallImage(wall.Id));
             
             if (!String.IsNullOrEmpty(wall.ImageHref))
             {

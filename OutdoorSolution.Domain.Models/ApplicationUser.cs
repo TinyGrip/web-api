@@ -19,5 +19,9 @@ namespace OutdoorSolution.Domain.Models
             // Add custom user claims here
             return userIdentity;
         }
+
+        public string AvatarImage { get; set; }
+
+        public string CoverImage { get; set; }
     }
 }

@@ -88,6 +88,10 @@
     <Compile Include="Migrations\201512021910363_AreaImageUserId.Designer.cs">
       <DependentUpon>201512021910363_AreaImageUserId.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201512121152133_UserImages.cs" />
+    <Compile Include="Migrations\201512121152133_UserImages.Designer.cs">
+      <DependentUpon>201512121152133_UserImages.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoleNames.cs" />
@@ -123,6 +127,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201512021910363_AreaImageUserId.resx">
       <DependentUpon>201512021910363_AreaImageUserId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201512121152133_UserImages.resx">
+      <DependentUpon>201512121152133_UserImages.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

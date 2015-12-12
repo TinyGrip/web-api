@@ -16,7 +16,7 @@ namespace OutdoorSolution.Links
     /// <summary>
     /// Creates hypermedia links on route dto object
     /// </summary>
-    public class RouteLinker
+    public class RouteLinker : ILinker
     {
         readonly IRouteService routeService;
 

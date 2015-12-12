@@ -26,5 +26,7 @@ namespace OutdoorSolution.Dto
         public Link Routes { get; set; }
 
         public Link AddRoute { get; set; }
+
+        public Link UploadImage { get; set; }
     }
 }

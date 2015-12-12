@@ -15,7 +15,7 @@ namespace OutdoorSolution.Links
     /// <summary>
     /// Creates hypermedia links for area dto object
     /// </summary>
-    public class AreaLinker
+    public class AreaLinker : ILinker
     {
         private readonly WallLinker wallLinker;
         private readonly RouteLinker routeLinker;

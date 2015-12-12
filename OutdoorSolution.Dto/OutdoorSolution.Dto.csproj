@@ -55,6 +55,7 @@
     <Compile Include="Infrastructure\Page.cs" />
     <Compile Include="Infrastructure\PageItem.cs" />
     <Compile Include="Infrastructure\PermissionsData.cs" />
+    <Compile Include="UserInfoDto.cs" />
     <Compile Include="UserResourceDto.cs" />
     <Compile Include="PointDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

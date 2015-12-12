@@ -216,6 +216,7 @@
     <Compile Include="Controllers\Area\AreaImagesController.cs" />
     <Compile Include="Controllers\Area\AreasController.cs" />
     <Compile Include="Controllers\Area\PreviewAreasController.cs" />
+    <Compile Include="Controllers\UserInfoController.cs" />
     <Compile Include="Controllers\UserResourceController.cs" />
     <Compile Include="Controllers\PagingController.cs" />
     <Compile Include="Controllers\RootController.cs" />
@@ -237,10 +238,13 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Links\AreaLinker.cs" />
+    <Compile Include="Links\ILinker.cs" />
     <Compile Include="Links\RouteLinker.cs" />
+    <Compile Include="Links\UserInfoLinker.cs" />
     <Compile Include="Links\WallLinker.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\Enums.cs" />
     <Compile Include="Models\PagingParams.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
@@ -307,6 +311,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\UserData\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
