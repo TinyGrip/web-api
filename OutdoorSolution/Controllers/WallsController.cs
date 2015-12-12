@@ -3,13 +3,11 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
-using OutdoorSolution.Domain.Models;
 using OutdoorSolution.Dto;
 using OutdoorSolution.Helpers;
 using OutdoorSolution.Dto.Infrastructure;
 using OutdoorSolution.Models;
 using OutdoorSolution.Providers;
-using Microsoft.AspNet.Identity;
 using OutdoorSolution.Services.Interfaces;
 using OutdoorSolution.Links;
 

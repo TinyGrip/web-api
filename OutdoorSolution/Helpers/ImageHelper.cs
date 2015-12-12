@@ -1,4 +1,5 @@
-﻿using OutdoorSolution.Services.Common;
+﻿using OutdoorSolution.Dto.Infrastructure;
+using OutdoorSolution.Services.Common;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -46,6 +47,14 @@ namespace OutdoorSolution.Helpers
             }
 
             return new Uri(url);
+        }
+
+        public static Link GetImageLink(string path, Uri requestUri)
+        {
+            return new Link()
+            {
+                Href = GetImageUri(path, requestUri)
+            };
         }
     }
 }

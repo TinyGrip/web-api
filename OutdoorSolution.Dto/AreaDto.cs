@@ -40,5 +40,7 @@ namespace OutdoorSolution.Dto
         public Link Walls { get; set; }
 
         public Link AddWall { get; set; }
+
+        public Link AddImage { get; set; }
     }
 }

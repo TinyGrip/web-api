@@ -14,5 +14,7 @@ namespace OutdoorSolution.Dto
         public string Href { get; set; }
 
         public Link Link { get; set; }
+
+        public Link UploadFile { get; set; }
     }
 }

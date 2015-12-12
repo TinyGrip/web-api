@@ -1,52 +1,87 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Web.Http;
-using OutdoorSolution.Dal;
-using OutdoorSolution.Domain.Models;
 using OutdoorSolution.Dto;
 using OutdoorSolution.Services.Interfaces;
-using Microsoft.AspNet.Identity;
+using System.Net;
+using OutdoorSolution.Providers;
+using OutdoorSolution.Helpers;
+using System.Net.Http;
+using OutdoorSolution.Links;
 
 namespace OutdoorSolution.Controllers
 {
-    [Route("api/Areas/{areaId}/Images")]
+   // [Route("api/Areas/{areaId}/Images")]
     public class AreaImagesController : UserResourceController
     {
         private const string AREA_IMAGE_ROUTE = "api/Areas/Images/{id}";
 
         IAreaImageService aiService;
+        AreaImageLinker aiLinker;
 
-        public AreaImagesController(IAreaImageService areaImageService)
+        public AreaImagesController(IAreaImageService areaImageService, AreaImageLinker aiLinker)
         {
             this.aiService = areaImageService;
-            this.aiService.UserId = User.Identity.GetUserId();
+            this.aiLinker = aiLinker;
         }
 
-        [Route(AREA_IMAGE_ROUTE)]
+        //[Route(AREA_IMAGE_ROUTE)]
         public async override Task<IHttpActionResult> GetById(Guid id)
         {
             var areaImage = await aiService.GetById(id);
+            aiLinker.Linkify(areaImage, Url);
             return Ok(areaImage);
         }
 
         public async Task<IHttpActionResult> GetByAreaId(Guid areaId)
         {
             var areaImagesDtos = await aiService.GetByArea(areaId);
+            aiLinker.Linkify(areaImagesDtos, Url);
             return Ok(areaImagesDtos);
         }
 
         [Authorize]
-        public async Task<IHttpActionResult> PostAreaImage(Guid areaId, [FromBody]AreaImageDto areaImageDto)
+        public async Task<IHttpActionResult> PostAreaImage(Guid areaId, [FromBody]AreaImageDto areaImage)
         {
-            var areaImageWrapper = aiService.Create(areaId, areaImageDto);
+            var areaImageWrapper = aiService.Create(areaId, areaImage);
 
             await UnitOfWork.SaveChangesAsync();
 
-            areaImageDto = await areaImageWrapper.GetValue();
-            return Created(String.Empty, areaImageDto);
+            areaImage = await areaImageWrapper.GetValue();
+            aiLinker.Linkify(areaImage, Url);
+            return Created(String.Empty, areaImage);
         }
 
-        [Route(AREA_IMAGE_ROUTE)]
+        [Authorize]
+        public async Task<IHttpActionResult> PatchAreaImage(Guid areaImageId)
+        {
+            if (!Request.Content.IsMimeMultipartContent())
+            {
+                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+            }
+
+            // read the form data
+            var provider = new MultipartImageStreamsProvider();
+            await Request.Content.ReadAsMultipartAsync(provider);
+
+            var imageContent = provider.Contents[0];
+            if (imageContent != null)
+            {
+                await aiService.UpdateImage(
+                    areaImageId,
+                    await imageContent.ReadAsStreamAsync(),
+                    ImageHelper.GetImageExtension(imageContent.Headers.ContentType.MediaType));
+            }
+            else
+                return BadRequest("No supported image format found");
+
+            // save updates
+            await UnitOfWork.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        //[Route(AREA_IMAGE_ROUTE)]
         [Authorize]
         public async Task<IHttpActionResult> DeleteAreaImage(Guid id)
         {

@@ -25,7 +25,7 @@ namespace OutdoorSolution.Services
             this.userManager = userManager;
         }
 
-        public string UserId { get; set; }
+        public virtual string UserId { get; set; }
 
         public async Task<bool> CanUserAccessResource(Guid resourceId, PermissionType permission)
         {

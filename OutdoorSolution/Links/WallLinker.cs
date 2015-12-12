@@ -32,11 +32,7 @@ namespace OutdoorSolution.Links
             
             if (!String.IsNullOrEmpty(wall.ImageHref))
             {
-                wall.Image = new Link()
-                {
-                    Href = ImageHelper.GetImageUri(wall.ImageHref, urlHelper.Request.RequestUri),
-                    Templated = false
-                };
+                wall.Image = ImageHelper.GetImageLink(wall.ImageHref, urlHelper.Request.RequestUri);
 
                 wall.ImageHref = null;
             }

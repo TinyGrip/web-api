@@ -1,11 +1,6 @@
-﻿using Castle.Core;
-using Castle.MicroKernel.Registration;
+﻿using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using OutdoorSolution.Dal;
-using OutdoorSolution.Domain.Models;
 using OutdoorSolution.Helpers;
 using OutdoorSolution.Links;
 using OutdoorSolution.Services;

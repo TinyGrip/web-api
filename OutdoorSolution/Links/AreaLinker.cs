@@ -19,28 +19,33 @@ namespace OutdoorSolution.Links
     {
         private readonly WallLinker wallLinker;
         private readonly RouteLinker routeLinker;
+        private readonly AreaImageLinker aiLinker;
 
-        public AreaLinker(WallLinker wallMapper, RouteLinker routeMapper)
+        public AreaLinker(WallLinker wallMapper, RouteLinker routeMapper, AreaImageLinker aiLinker)
         {
             this.wallLinker = wallMapper;
             this.routeLinker = routeMapper;
+            this.aiLinker = aiLinker;
         }
 
         public void Linkify(AreaDto area, UrlHelper urlHelper)
         {
             area.Self = urlHelper.Link<AreasController>(c => c.GetById(area.Id));
             area.Walls = urlHelper.Link<WallsController>(c => c.Get(area.Id, null));
-            
+
             if (area.Permissions.CanCreateChild)
+            {
                 area.AddWall = urlHelper.Link<WallsController>(c => c.Post(area.Id, null));
+                area.AddImage = urlHelper.Link<AreaImagesController>(c => c.PostAreaImage(area.Id, null));
+            }
             if (area.Permissions.CanModify)
                 area.Update = urlHelper.Link<AreasController>(a => a.Put(area.Id, null));
             if (area.Permissions.CanDelete)
                 area.Update = urlHelper.Link<AreasController>(a => a.Delete(area.Id));
 
-            area.Images.ToList().ForEach(ai => Linkify(ai, urlHelper));
-            area.PreviewWalls.ToList().ForEach(w => wallLinker.Linkify(w, urlHelper));
-            area.PreviewRoutes.ToList().ForEach(r => routeLinker.Linkify(r, urlHelper));
+            aiLinker.Linkify(area.Images, urlHelper);
+            wallLinker.Linkify(area.PreviewWalls, urlHelper);
+            routeLinker.Linkify(area.PreviewRoutes, urlHelper);
         }
         
         public void Linkify(IEnumerable<AreaDto> areas, UrlHelper urlHelper)
@@ -53,7 +58,6 @@ namespace OutdoorSolution.Links
 
         public void LinkifyPreview(AreaDto area, UrlHelper urlHelper)
         {
-
             // Creating a link to AreaController in order to get full entry
             area.Self = urlHelper.Link<AreasController>(c => c.GetById(area.Id));
         }
@@ -64,17 +68,6 @@ namespace OutdoorSolution.Links
             {
                 LinkifyPreview(area, urlHelper);
             }
-        }
-
-        public void Linkify(AreaImageDto areaImage, UrlHelper urlHelper)
-        {
-            areaImage.Link = new Link()
-            {
-                Href = new Uri(areaImage.Href),
-                Templated = false
-            };
-
-            areaImage.Href = null;
         }
     }
 }

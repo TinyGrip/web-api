@@ -1,5 +1,4 @@
-﻿using OutdoorSolution.Domain.Models;
-using OutdoorSolution.Dto;
+﻿using OutdoorSolution.Dto;
 using OutdoorSolution.Services.Common;
 using System;
 using System.Collections.Generic;

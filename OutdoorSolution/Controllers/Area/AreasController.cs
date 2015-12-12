@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNet.Identity;
-using OutdoorSolution.Domain.Models;
 using OutdoorSolution.Dto;
 using OutdoorSolution.Dto.Infrastructure;
 using OutdoorSolution.Helpers;
@@ -7,7 +6,6 @@ using OutdoorSolution.Links;
 using OutdoorSolution.Models;
 using OutdoorSolution.Services.Interfaces;
 using System;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;

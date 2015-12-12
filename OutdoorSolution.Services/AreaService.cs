@@ -20,13 +20,30 @@ namespace OutdoorSolution.Services
     {
         IWallService wallService;
         IRouteService routeService;
+        IAreaImageService aiService;
         private const int PREVIEW_ITEMS_COUNT = 3;
 
-        public AreaService(IUnitOfWork unitOfWork, TGUserManager userManager, IWallService wallService, IRouteService routeService)
+        public AreaService(IUnitOfWork unitOfWork, TGUserManager userManager, IWallService wallService, IRouteService routeService, IAreaImageService aiService)
             : base(unitOfWork, userManager)
         {
             this.wallService = wallService;
             this.routeService = routeService;
+            this.aiService = aiService;
+        }
+
+        public override string UserId
+        {
+            get
+            {
+                return base.UserId;
+            }
+            set
+            {
+                wallService.UserId = value;
+                routeService.UserId = value;
+                aiService.UserId = value;
+                base.UserId = value;
+            }
         }
 
         public async Task<AreaDto> GetById(Guid id)
@@ -85,9 +102,6 @@ namespace OutdoorSolution.Services
             UpdateArea(area, areaDto);
             area.Created = DateTime.UtcNow;
             area.UserId = UserId;
-            if (areaDto.Images != null)
-                area.Images = areaDto.Images.Select(x => AreaImageService.CreateAreaImage(x)).ToList(); // TODO: check user ID
-
             unitOfWork.Areas.Add(area);
 
             return new ResourceWrapper<AreaDto>(() => CreateDto(area));
@@ -124,7 +138,7 @@ namespace OutdoorSolution.Services
                 Rating = area.Rating,
                 RatingsCount = area.RatingsCount,
                 // get area images from service also
-                Images = area.Images.Select(x => AreaImageService.CreateAreaImageDto(x)).ToList()
+                Images = await aiService.GetByArea(area.Id) // TODO: think if needed
             };
 
             await SetPermissions(areaDto, area);

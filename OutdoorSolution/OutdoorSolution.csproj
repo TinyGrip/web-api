@@ -233,10 +233,10 @@
     <Compile Include="IoC\WindsorCompositionRoot.cs" />
     <Compile Include="IoC\WindsorControllerFactory.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Links\AreaImageLinker.cs" />
     <Compile Include="Links\AreaLinker.cs" />
     <Compile Include="Links\ILinker.cs" />
     <Compile Include="Links\RouteLinker.cs" />

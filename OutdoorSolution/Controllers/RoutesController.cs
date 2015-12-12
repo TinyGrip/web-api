@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Net;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
-using OutdoorSolution.Domain.Models;
 using OutdoorSolution.Dto;
 using OutdoorSolution.Models;
 using OutdoorSolution.Helpers;
