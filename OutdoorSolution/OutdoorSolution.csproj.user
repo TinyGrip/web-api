@@ -9,7 +9,7 @@
     <WebStackScaffolding_IsAsyncSelected>True</WebStackScaffolding_IsAsyncSelected>
     <WebStackScaffolding_DbContextTypeFullName>OutdoorSolution.Dal.ApplicationDbContext</WebStackScaffolding_DbContextTypeFullName>
     <ProjectView>ProjectFiles</ProjectView>
-    <NameOfLastUsedPublishProfile>TG</NameOfLastUsedPublishProfile>
+    <NameOfLastUsedPublishProfile>myWindowsHosting</NameOfLastUsedPublishProfile>
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
