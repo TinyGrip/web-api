@@ -4,6 +4,7 @@ using System.Web.Http;
 using OutdoorSolution.Helpers;
 using OutdoorSolution.Dto.Infrastructure;
 using Microsoft.AspNet.Identity;
+using System.Reflection;
 
 namespace OutdoorSolution.Controllers
 {
@@ -12,6 +13,7 @@ namespace OutdoorSolution.Controllers
         public IHttpActionResult Get()
         {
             var nodes = new Dictionary<string, object>();
+            nodes.Add("Version", Assembly.GetExecutingAssembly().GetName().Version.ToString());
             nodes.Add( "PreviewAreas", Url.Link<PreviewAreasController>(c => c.Get(null)) );
 
             // add account data

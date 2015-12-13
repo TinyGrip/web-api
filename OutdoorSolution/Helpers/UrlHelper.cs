@@ -106,7 +106,10 @@ namespace OutdoorSolution.Helpers
             var requestUri = urlHelper.Request.RequestUri;
             return new Link()
             {
-                Href = new Uri(requestUri.Scheme + "://" + requestUri.Host + ":" + requestUri.Port + resourcePath),
+                Href = new Uri(requestUri.Scheme + "://" +
+                    requestUri.Host + ":" + requestUri.Port +
+                    HttpContext.Current.Request.ApplicationPath + "/" +
+                    resourcePath),
                 Templated = true,
                 Method = httpMethod
             };

@@ -66,6 +66,8 @@ namespace OutdoorSolution.Services
         public async Task Delete(Guid id)
         {
             AreaImage areaImage = await GetResource(id, Common.PermissionType.Delete);
+            // delete file on server (if exists)
+            fsService.DeleteImage(areaImage.Url);
             unitOfWork.AreaImages.Remove(areaImage);
         }
 
