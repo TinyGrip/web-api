@@ -28,9 +28,9 @@ namespace OutdoorSolution.Services
             this.PasswordValidator = new PasswordValidator
             {
                 RequiredLength = 6,
-                RequireDigit = true,
-                RequireLowercase = true,
-                RequireUppercase = true,
+                RequireDigit = true
+                //RequireLowercase = true,
+                //RequireUppercase = true,
             };
         }
     }
