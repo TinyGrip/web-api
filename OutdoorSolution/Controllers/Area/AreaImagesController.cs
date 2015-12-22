@@ -11,7 +11,7 @@ using OutdoorSolution.Links;
 
 namespace OutdoorSolution.Controllers
 {
-   // [Route("api/Areas/{areaId}/Images")]
+    [Route(AREA_IMAGE_ROUTE)]
     public class AreaImagesController : UserResourceController
     {
         private const string AREA_IMAGE_ROUTE = "api/Areas/Images/{id}";
@@ -25,7 +25,6 @@ namespace OutdoorSolution.Controllers
             this.aiLinker = aiLinker;
         }
 
-        //[Route(AREA_IMAGE_ROUTE)]
         public async override Task<IHttpActionResult> GetById(Guid id)
         {
             var areaImage = await aiService.GetById(id);
@@ -33,6 +32,7 @@ namespace OutdoorSolution.Controllers
             return Ok(areaImage);
         }
 
+        [Route("api/Areas/{areaId}/Images")]
         public async Task<IHttpActionResult> GetByAreaId(Guid areaId)
         {
             var areaImagesDtos = await aiService.GetByArea(areaId);
@@ -81,7 +81,6 @@ namespace OutdoorSolution.Controllers
             return Ok();
         }
 
-        //[Route(AREA_IMAGE_ROUTE)]
         [Authorize]
         public async Task<IHttpActionResult> DeleteAreaImage(Guid id)
         {

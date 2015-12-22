@@ -17,7 +17,7 @@ namespace OutdoorSolution.Controllers
             var nodes = new Dictionary<string, object>();
             nodes.Add( "Version", Assembly.GetExecutingAssembly().GetName().Version.ToString() );
             nodes.Add( "PreviewAreas", Url.Link<PreviewAreasController>(c => c.Get(null)) );
-            nodes.Add( "User", Url.GetSpecialResource(USER_NODES_ROUTE) );
+            nodes.Add( "User", Url.Link<RootController>(c => c.GetUserLink()) );
 
             return Ok(nodes);
         }
@@ -28,20 +28,17 @@ namespace OutdoorSolution.Controllers
             // add account data
             var accountNodes = new Dictionary<string, object>();
             
-            // TODO: use commented, when link generation is improved 
             if (User.Identity.IsAuthenticated)
             {
                 var userId = new Guid(User.Identity.GetUserId());
-                accountNodes.Add("UserInfo", Url.Link<UserInfoController>(c => c.GetById(userId)));
-                accountNodes.Add("ChangePassword", Url.GetSpecialResource("/api/Account/ChangePassword"));
-                //accountNodes.Add( "Logout", Url.Link<AccountController>(c => c.Logout()) );
-                accountNodes.Add("Logout", Url.GetSpecialResource("/api/Account/Logout"));
+                accountNodes.Add( "UserInfo", Url.Link<UserInfoController>(c => c.GetById(userId)) );
+                accountNodes.Add( "ChangePassword", Url.Link<AccountController>(c => c.ChangePassword(null)) );
+                accountNodes.Add( "Logout", Url.Link<AccountController>(c => c.Logout()) );
             }
             else
             {
-                accountNodes.Add("Login", Url.GetSpecialResource("/Token", HttpMethods.Post));
-                //accountNodes.Add( "Register", Url.Link<AccountController>(c => c.Register(null)) );
-                accountNodes.Add("Register", Url.GetSpecialResource("/api/Account/Register", HttpMethods.Post));
+                accountNodes.Add( "Login", Url.GetSpecialResource("Token", "POST") );
+                accountNodes.Add( "Register", Url.Link<AccountController>(c => c.Register(null)) );
             }
 
             return Ok(accountNodes);

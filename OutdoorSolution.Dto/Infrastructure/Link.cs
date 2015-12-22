@@ -14,10 +14,6 @@ namespace OutdoorSolution.Dto.Infrastructure
 
         public bool Templated { get; set; }
 
-        /// <summary>
-        /// Http method for using this Link's Href. Null value implies default method - GET
-        /// </summary>
-        [JsonConverter(typeof(StringEnumConverter))]
-        public HttpMethods? Method { get; set; }
+        public string Method { get; set; }
     }
 }

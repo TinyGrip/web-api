@@ -28,10 +28,7 @@ namespace OutdoorSolution.Links
             wall.Self = urlHelper.Link<WallsController>(c => c.GetById(wall.Id));
             wall.Area = urlHelper.Link<AreasController>(c => c.GetById(wall.AreaId));
             wall.Routes = urlHelper.Link<RoutesController>(c => c.Get(wall.Id, null));
-            wall.UploadImage = urlHelper.Link<WallsController>(c => c.PatchWallImage(wall.Id));
-            // TODO: use upper line, when link generation is fixed
-            wall.UploadImage = urlHelper.GetSpecialResource("/api/Walls/" + wall.Id + "/Image");
-
+            
             if (!String.IsNullOrEmpty(wall.ImageHref))
             {
                 wall.Image = ImageHelper.GetImageLink(wall.ImageHref, urlHelper.Request.RequestUri);
@@ -41,7 +38,10 @@ namespace OutdoorSolution.Links
             if (wall.Permissions.CanCreateChild)
                 wall.AddRoute = urlHelper.Link<RoutesController>(c => c.Post(wall.Id, null));
             if (wall.Permissions.CanModify)
+            {
+                wall.UploadImage = urlHelper.Link<WallsController>(c => c.PatchWallImage(wall.Id));
                 wall.Update = urlHelper.Link<WallsController>(c => c.Put(wall.Id, null));
+            }
             if (wall.Permissions.CanDelete)
                 wall.Delete = urlHelper.Link<WallsController>(c => c.Delete(wall.Id));
         }
