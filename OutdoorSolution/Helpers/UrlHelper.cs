@@ -112,7 +112,7 @@ namespace OutdoorSolution.Helpers
                 var currArgument = argDelegate.DynamicInvoke();
 
                 // save name value pair depending on parameter type
-                if (IsSystemType(p.ParameterType)) // system type value should be saved as is
+                if (currArgument != null && IsSystemType(p.ParameterType)) // system type value should be saved as is
                 {
                     urlParamsDictionary.Add(p.Name, currArgument.ToString());
                 }
@@ -153,8 +153,20 @@ namespace OutdoorSolution.Helpers
 
         private static bool IsSystemType(Type type)
         {
-            return type.IsPrimitive || type == typeof(string) || type == typeof(DateTime)
-                || type == typeof(TimeSpan) || type == typeof(Guid);
+
+            if (type.IsPrimitive || type == typeof(string) || type == typeof(DateTime)
+                || type == typeof(TimeSpan) || type == typeof(Guid))
+                return true;
+            else
+            {
+                var underLyingType = Nullable.GetUnderlyingType(type);
+                if (underLyingType != null)
+                {
+                    return IsSystemType(underLyingType);
+                }
+
+                return false;
+            }
         }
 
         private static bool HasFromUriAttr(ParameterInfo pInfo)

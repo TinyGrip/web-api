@@ -64,7 +64,7 @@ namespace OutdoorSolution.Controllers
         }
 
         [Authorize]
-        [Route("api/Walls/{wallId}/Image")]
+        [Route("Walls/{wallId}/Image")]
         public async Task<IHttpActionResult> PatchWallImage(Guid wallId)
         {
             if (!Request.Content.IsMimeMultipartContent())

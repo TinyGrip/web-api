@@ -10,6 +10,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Microsoft.AspNet.Identity;
 
 namespace OutdoorSolution.Controllers
 {
@@ -27,9 +28,14 @@ namespace OutdoorSolution.Controllers
             this.unitOfWork = unitOfWork;
         }
 
-        public async Task<IHttpActionResult> GetById(Guid id)
+        public async Task<IHttpActionResult> GetById(Guid? id = null)
         {
-            var userInfo = await userInfoService.GetById(id);
+            if (!id.HasValue)
+            {
+                id = new Guid(User.Identity.GetUserId());
+            }
+
+            var userInfo = await userInfoService.GetById(id.Value);
             userInfoLinker.Linkify(userInfo, Url);
             return Ok(userInfo);
         }
@@ -42,7 +48,7 @@ namespace OutdoorSolution.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        [Route("api/UserInfo/{userId}/Image")]
+        [Route("UserInfo/{userId}/Image")]
         public async Task<IHttpActionResult> PatchImage(Guid userId, UserImageTypes type)
         {
             if (!Request.Content.IsMimeMultipartContent())

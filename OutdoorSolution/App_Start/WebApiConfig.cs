@@ -6,6 +6,7 @@ using System.Web.Http;
 using Microsoft.Owin.Security.OAuth;
 using Newtonsoft.Json.Serialization;
 using OutdoorSolution.Filters;
+using OutdoorSolution.Providers;
 
 namespace OutdoorSolution
 {
@@ -20,7 +21,7 @@ namespace OutdoorSolution
             config.Filters.Add(new ValidateModelAttribute());
 
             // Web API routes
-            config.MapHttpAttributeRoutes();
+            config.MapHttpAttributeRoutes(new CentralizedPrefixProvider("api"));
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",

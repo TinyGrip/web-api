@@ -14,7 +14,7 @@ namespace OutdoorSolution.Controllers
     [Route(AREA_IMAGE_ROUTE)]
     public class AreaImagesController : UserResourceController
     {
-        private const string AREA_IMAGE_ROUTE = "api/Areas/Images/{id}";
+        private const string AREA_IMAGE_ROUTE = "Areas/Images/{id}";
 
         IAreaImageService aiService;
         AreaImageLinker aiLinker;
@@ -32,7 +32,7 @@ namespace OutdoorSolution.Controllers
             return Ok(areaImage);
         }
 
-        [Route("api/Areas/{areaId}/Images")]
+        [Route("Areas/{areaId}/Images")]
         public async Task<IHttpActionResult> GetByAreaId(Guid areaId)
         {
             var areaImagesDtos = await aiService.GetByArea(areaId);
