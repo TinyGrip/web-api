@@ -40,6 +40,9 @@ namespace OutdoorSolution.Links
             userInfo.UploadAvatarImage = urlHelper.Link<UserInfoController>(c => c.PatchImage(userInfo.Id, UserImageTypes.Avatar));
             userInfo.UploadCoverImage = urlHelper.Link<UserInfoController>(c => c.PatchImage(userInfo.Id, UserImageTypes.Cover));
 
+            userInfo.ChangePassword = urlHelper.Link<AccountController>(c => c.ChangePassword(null));
+            userInfo.Logout = urlHelper.Link<AccountController>(c => c.Logout());
+
             userInfo.Self = urlHelper.Link<UserInfoController>(c => c.GetById(userInfo.Id));
         }
     }

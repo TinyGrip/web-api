@@ -30,5 +30,9 @@ namespace OutdoorSolution.Dto
         public Link AvatarImage { get; set; }
 
         public Link CoverImage { get; set; }
+
+        public Link ChangePassword { get; set; }
+
+        public Link Logout { get; set; }
     }
 }
