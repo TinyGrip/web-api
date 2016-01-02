@@ -15,7 +15,8 @@ namespace OutdoorSolution.Controllers
             var nodes = new Dictionary<string, object>();
             nodes.Add( "Version", Assembly.GetExecutingAssembly().GetName().Version.ToString() );
             nodes.Add( "PreviewAreas", Url.Link<PreviewAreasController>(c => c.Get(null)) );
-            
+            nodes.Add( "AddArea", Url.Link<AreasController>(c => c.PostArea(null))) ;
+
             var authNodes = new Dictionary<string, object>();
             authNodes.Add( "User", Url.Link<UserInfoController>(c => c.GetById(null)) );
             
