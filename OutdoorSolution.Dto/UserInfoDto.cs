@@ -54,6 +54,8 @@ namespace OutdoorSolution.Dto
 
         public Link Self { get; set; }
 
+        public Link Update { get; set; }
+
         public Link UploadAvatarImage { get; set; }
 
         public Link UploadCoverImage { get; set; }
