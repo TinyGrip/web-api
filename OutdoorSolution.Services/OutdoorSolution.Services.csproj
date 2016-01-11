@@ -71,8 +71,11 @@
   <ItemGroup>
     <Compile Include="Common\IPagingData.cs" />
     <Compile Include="Common\PagingData.cs" />
+    <Compile Include="Exceptions\WrongGradeSystem.cs" />
+    <Compile Include="Interfaces\IRouteGradeService.cs" />
     <Compile Include="Interfaces\IUserInfoService.cs" />
     <Compile Include="Interfaces\IUserResourceService.cs" />
+    <Compile Include="RouteGradeService.cs" />
     <Compile Include="TGUserManager.cs" />
     <Compile Include="AreaImageService.cs" />
     <Compile Include="AreaService.cs" />

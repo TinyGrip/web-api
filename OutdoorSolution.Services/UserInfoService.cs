@@ -16,12 +16,14 @@ namespace OutdoorSolution.Services
         readonly TGUserManager userManager;
         readonly IUnitOfWork unitOfWork;
         readonly IFileSystemService fsService;
+        readonly IRouteGradeService routeGradeService;
 
-        public UserInfoService(TGUserManager userManager, IUnitOfWork unitOfWork, IFileSystemService fileSystemService)
+        public UserInfoService(TGUserManager userManager, IUnitOfWork unitOfWork, IFileSystemService fileSystemService, IRouteGradeService routeGradeService)
         {
             this.userManager = userManager;
             this.unitOfWork = unitOfWork;
             this.fsService = fileSystemService;
+            this.routeGradeService = routeGradeService;
         }
 
         public async Task<UserInfoDto> GetById(Guid id)
@@ -33,8 +35,18 @@ namespace OutdoorSolution.Services
         public async Task Update(Guid id, UserInfoDto userInfoDto)
         {
             var user = await userManager.FindByIdAsync(id.ToString());
-            user.CoverImage = userInfoDto.CoverHref;
-            user.AvatarImage = userInfoDto.AvatarHref;
+            if (user.CoverImage != userInfoDto.CoverHref)
+            {
+                fsService.DeleteImage(user.CoverImage);
+                user.CoverImage = userInfoDto.CoverHref;
+            }
+            if (user.AvatarImage != userInfoDto.AvatarHref)
+            {
+                fsService.DeleteImage(user.AvatarImage);
+                user.AvatarImage = userInfoDto.AvatarHref;
+            }
+            user.FreeClimbingGradesSystem = userInfoDto.FreeClimbingGradesSystem;
+            user.BoulderingGradesSystem = userInfoDto.BoulderingGradesSystem;
             // TODO: think about email change
         }
 
@@ -71,7 +83,11 @@ namespace OutdoorSolution.Services
                 Id = new Guid(appUser.Id),
                 Email = appUser.Email,
                 AvatarHref = appUser.AvatarImage,
-                CoverHref = appUser.CoverImage
+                CoverHref = appUser.CoverImage,
+                BoulderingGradesSystem = appUser.BoulderingGradesSystem,
+                FreeClimbingGradesSystem = appUser.FreeClimbingGradesSystem,
+                BoulderingGrades = routeGradeService.GetBoulderingGrades(appUser.BoulderingGradesSystem),
+                FreeClimbingGrades = routeGradeService.GetFreeClimbingGrades(appUser.FreeClimbingGradesSystem)
             };
 
             return userDto;

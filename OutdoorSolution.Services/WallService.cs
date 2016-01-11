@@ -66,7 +66,8 @@ namespace OutdoorSolution.Services
         public async Task Update(Guid id, WallDto wallDto)
         {
             var wall = await GetResource(id, PermissionType.Update);
-            fsService.DeleteImage(wall.Image);
+            if (wall.Image != wallDto.ImageHref)
+                fsService.DeleteImage(wall.Image);
             UpdateWall(wall, wallDto);
         }
 

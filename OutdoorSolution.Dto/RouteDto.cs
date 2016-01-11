@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using OutdoorSolution.Common;
 using OutdoorSolution.Dto.Infrastructure;
 using System;
@@ -12,8 +13,9 @@ namespace OutdoorSolution.Dto
 
         public IEnumerable<PointDto> Path { get; set; }
 
-        public double Complexity { get; set; }
+        public string Grade { get; set; }
 
+        [JsonConverter(typeof(StringEnumConverter))]
         public RouteType Type { get; set; }
 
         [JsonIgnore]

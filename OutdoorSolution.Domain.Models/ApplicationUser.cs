@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using OutdoorSolution.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,5 +24,9 @@ namespace OutdoorSolution.Domain.Models
         public string AvatarImage { get; set; }
 
         public string CoverImage { get; set; }
+
+        public FreeClimbingGradesSystems FreeClimbingGradesSystem { get; set; }
+
+        public BoulderingGradesSystems BoulderingGradesSystem { get; set; }
     }
 }

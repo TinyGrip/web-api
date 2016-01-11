@@ -101,6 +101,10 @@
     <Compile Include="Migrations\201512121152133_UserImages.Designer.cs">
       <DependentUpon>201512121152133_UserImages.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201601111446399_GradesSystems.cs" />
+    <Compile Include="Migrations\201601111446399_GradesSystems.Designer.cs">
+      <DependentUpon>201601111446399_GradesSystems.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoleNames.cs" />
@@ -110,6 +114,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\OutdoorSolution.Common\OutdoorSolution.Common.csproj">
+      <Project>{e7bfce17-3f9e-417c-9ff3-183cd3d5cc56}</Project>
+      <Name>OutdoorSolution.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OutdoorSolution.Domain.Models\OutdoorSolution.Domain.Models.csproj">
       <Project>{2a9ad0e4-d307-485e-aedd-3362d203dfe4}</Project>
       <Name>OutdoorSolution.Domain.Models</Name>
@@ -139,6 +147,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201512121152133_UserImages.resx">
       <DependentUpon>201512121152133_UserImages.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601111446399_GradesSystems.resx">
+      <DependentUpon>201601111446399_GradesSystems.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

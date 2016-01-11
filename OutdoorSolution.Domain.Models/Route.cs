@@ -23,7 +23,17 @@ namespace OutdoorSolution.Domain.Models
 
         public double Complexity { get; set; }
 
-        public RouteType Type { get; set; }
+        private RouteType type { get; set; }
+        public RouteType Type
+        {
+            get { return type; }
+            set
+            {
+                if (!Enum.IsDefined(typeof(RouteType), value))
+                    throw new ArgumentException("Wrong route type value");
+                type = value;  
+            }
+        }
 
         public Guid WallId { get; set; }
 

@@ -1,4 +1,6 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using OutdoorSolution.Common;
 using OutdoorSolution.Dto.Infrastructure;
 using System;
 using System.Collections.Generic;
@@ -18,6 +20,35 @@ namespace OutdoorSolution.Dto
         public string AvatarHref { get; set; }
 
         public string CoverHref { get; set; }
+
+        private FreeClimbingGradesSystems freeClimbingGradesSystem;
+        public FreeClimbingGradesSystems FreeClimbingGradesSystem
+        {
+            get { return freeClimbingGradesSystem; }
+            set
+            {
+                if (!Enum.IsDefined(typeof(FreeClimbingGradesSystems), value))
+                    throw new ArgumentException("Wrong free climbing grade value");
+                freeClimbingGradesSystem = value;
+            }
+        }
+
+        private BoulderingGradesSystems boulderingGradesSystem;
+        public BoulderingGradesSystems BoulderingGradesSystem 
+        {
+            get { return boulderingGradesSystem; }
+            set
+            {
+                if (!Enum.IsDefined(typeof(BoulderingGradesSystems), value))
+                    throw new ArgumentException("Wrong bouldering grade value");
+
+                boulderingGradesSystem = value;
+            }
+        }
+
+        public string[] FreeClimbingGrades { get; set; }
+
+        public string[] BoulderingGrades { get; set; }
 
         // ---- Links ----
 

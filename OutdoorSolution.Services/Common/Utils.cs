@@ -71,7 +71,7 @@ namespace OutdoorSolution.Services.Common
 
             foreach (var point in points)
 	        {
-                wellKnownText.Append(point.X + " " + point.Y + ",");
+                wellKnownText.Append(point.X.ToString(CultureInfo.InvariantCulture) + " " + point.Y.ToString(CultureInfo.InvariantCulture) + ",");
 	        }
             wellKnownText[wellKnownText.Length - 1] = ')';
 

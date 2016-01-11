@@ -11,14 +11,18 @@ using System.Data.Entity;
 using OutdoorSolution.Services.Results;
 using OutdoorSolution.Services.Interfaces;
 using OutdoorSolution.Services.Exceptions;
+using OutdoorSolution.Common;
 
 namespace OutdoorSolution.Services
 {
     public class RouteService : UserResourceService<Route>, IRouteService
     {
-        public RouteService(IUnitOfWork unitOfWork, TGUserManager userManager) :
+        IRouteGradeService routeGradeService;
+
+        public RouteService(IUnitOfWork unitOfWork, TGUserManager userManager, IRouteGradeService routeGradeService) :
             base(unitOfWork, userManager)
         {
+            this.routeGradeService = routeGradeService;
         }
 
         public async Task<RouteDto> GetById(Guid id)
@@ -98,10 +102,18 @@ namespace OutdoorSolution.Services
                 Id = route.Id,
                 Name = route.Name,
                 Type = route.Type,
-                Complexity = route.Complexity,
                 Path = Utils.ConvertDbGeometry(route.Path),
                 WallId = route.WallId
             };
+
+            if (route.Type == RouteType.Boulder)
+            {
+                routeDto.Grade = routeGradeService.ComplexityToGrade(route.Complexity, route.User.BoulderingGradesSystem);
+            }
+            else
+            {
+                routeDto.Grade = routeGradeService.ComplexityToGrade(route.Complexity, route.User.FreeClimbingGradesSystem);
+            }
 
             await SetPermissions(routeDto, route);
 
@@ -112,7 +124,19 @@ namespace OutdoorSolution.Services
         {
             route.Name = routeDto.Name;
             route.Type = routeDto.Type;
-            route.Complexity = routeDto.Complexity;
+
+            ApplicationUser user = route.User;
+            if (user == null)
+                user = userManager.Users.Single(u => u.Id == UserId); // TODO: think about async operation
+
+            if (route.Type == RouteType.Boulder)
+            {
+                route.Complexity = routeGradeService.GradeToComplexity(routeDto.Grade, user.BoulderingGradesSystem);
+            }
+            else
+            {
+                route.Complexity = routeGradeService.GradeToComplexity(routeDto.Grade, user.FreeClimbingGradesSystem);
+            }
             route.Path = Utils.CreateDbGeometry(routeDto.Path);
         }
     }
