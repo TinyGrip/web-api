@@ -21,28 +21,38 @@ namespace OutdoorSolution.Dto
 
         public string CoverHref { get; set; }
 
-        private FreeClimbingGradesSystems freeClimbingGradesSystem;
-        public FreeClimbingGradesSystems FreeClimbingGradesSystem
+        private FreeClimbingGradesSystems? freeClimbingGradesSystem;
+        public FreeClimbingGradesSystems? FreeClimbingGradesSystem
         {
             get { return freeClimbingGradesSystem; }
             set
             {
-                if (!Enum.IsDefined(typeof(FreeClimbingGradesSystems), value))
-                    throw new ArgumentException("Wrong free climbing grade value");
-                freeClimbingGradesSystem = value;
+                if (value.HasValue)
+                {
+                    if (!Enum.IsDefined(typeof(FreeClimbingGradesSystems), value))
+                        throw new ArgumentException("Wrong free climbing grade value");
+                    freeClimbingGradesSystem = value;
+                }
+                else
+                    freeClimbingGradesSystem = null;
             }
         }
 
-        private BoulderingGradesSystems boulderingGradesSystem;
-        public BoulderingGradesSystems BoulderingGradesSystem 
+        private BoulderingGradesSystems? boulderingGradesSystem;
+        public BoulderingGradesSystems? BoulderingGradesSystem 
         {
             get { return boulderingGradesSystem; }
             set
             {
-                if (!Enum.IsDefined(typeof(BoulderingGradesSystems), value))
-                    throw new ArgumentException("Wrong bouldering grade value");
+                if (value.HasValue)
+                {
+                    if (!Enum.IsDefined(typeof(BoulderingGradesSystems), value))
+                        throw new ArgumentException("Wrong bouldering grade value");
 
-                boulderingGradesSystem = value;
+                    boulderingGradesSystem = value;
+                }
+                else
+                    boulderingGradesSystem = null;
             }
         }
 

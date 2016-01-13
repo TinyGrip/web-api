@@ -35,18 +35,22 @@ namespace OutdoorSolution.Services
         public async Task Update(Guid id, UserInfoDto userInfoDto)
         {
             var user = await userManager.FindByIdAsync(id.ToString());
-            if (user.CoverImage != userInfoDto.CoverHref)
+            if (userInfoDto.CoverHref != null && user.CoverImage != userInfoDto.CoverHref)
             {
                 fsService.DeleteImage(user.CoverImage);
                 user.CoverImage = userInfoDto.CoverHref;
             }
-            if (user.AvatarImage != userInfoDto.AvatarHref)
+            if (userInfoDto.AvatarHref != null && user.AvatarImage != userInfoDto.AvatarHref)
             {
                 fsService.DeleteImage(user.AvatarImage);
                 user.AvatarImage = userInfoDto.AvatarHref;
             }
-            user.FreeClimbingGradesSystem = userInfoDto.FreeClimbingGradesSystem;
-            user.BoulderingGradesSystem = userInfoDto.BoulderingGradesSystem;
+
+            if (userInfoDto.FreeClimbingGradesSystem.HasValue)
+                user.FreeClimbingGradesSystem = userInfoDto.FreeClimbingGradesSystem.Value;
+            if (userInfoDto.BoulderingGradesSystem.HasValue)
+                user.BoulderingGradesSystem = userInfoDto.BoulderingGradesSystem.Value;
+
             // TODO: think about email change
         }
 

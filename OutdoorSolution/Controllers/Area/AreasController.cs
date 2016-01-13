@@ -53,7 +53,7 @@ namespace OutdoorSolution.Controllers
         }
 
         [Authorize]
-        public async Task<IHttpActionResult> Put(Guid id, [FromBody]AreaDto areaDto)
+        public async Task<IHttpActionResult> Patch(Guid id, [FromBody]AreaDto areaDto)
         {
             await areaService.Update(id, areaDto);
             await UnitOfWork.SaveChangesAsync();

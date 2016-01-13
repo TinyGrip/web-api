@@ -40,7 +40,7 @@ namespace OutdoorSolution.Links
             if (wall.Permissions.CanModify)
             {
                 wall.UploadImage = urlHelper.Link<WallsController>(c => c.PatchWallImage(wall.Id));
-                wall.Update = urlHelper.Link<WallsController>(c => c.Put(wall.Id, null));
+                wall.Update = urlHelper.Link<WallsController>(c => c.Patch(wall.Id, null));
             }
             if (wall.Permissions.CanDelete)
                 wall.Delete = urlHelper.Link<WallsController>(c => c.Delete(wall.Id));

@@ -41,7 +41,7 @@ namespace OutdoorSolution.Services
         /// <param name="relPath">Relative path of image from image root folder</param>
         public void DeleteImage(string relPath)
         {
-            if (relPath == null || String.IsNullOrWhiteSpace(relPath))
+            if (String.IsNullOrWhiteSpace(relPath))
                 return;
 
             // in case path is web address

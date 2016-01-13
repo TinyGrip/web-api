@@ -16,7 +16,7 @@ namespace OutdoorSolution.Dto
         public string Grade { get; set; }
 
         [JsonConverter(typeof(StringEnumConverter))]
-        public RouteType Type { get; set; }
+        public RouteType? Type { get; set; }
 
         [JsonIgnore]
         public Guid WallId { get; set; }

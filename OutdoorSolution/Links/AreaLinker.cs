@@ -39,7 +39,7 @@ namespace OutdoorSolution.Links
                 area.AddImage = urlHelper.Link<AreaImagesController>(c => c.PostAreaImage(area.Id, null));
             }
             if (area.Permissions.CanModify)
-                area.Update = urlHelper.Link<AreasController>(a => a.Put(area.Id, null));
+                area.Update = urlHelper.Link<AreasController>(a => a.Patch(area.Id, null));
             if (area.Permissions.CanDelete)
                 area.Update = urlHelper.Link<AreasController>(a => a.Delete(area.Id));
 

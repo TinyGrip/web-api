@@ -55,7 +55,7 @@ namespace OutdoorSolution.Controllers
         }
 
         [Authorize]
-        public async Task<IHttpActionResult> Put(Guid id, [FromBody]WallDto wallDto)
+        public async Task<IHttpActionResult> Patch(Guid id, [FromBody]WallDto wallDto)
         {
             await wallService.Update(id, wallDto);
             await UnitOfWork.SaveChangesAsync();

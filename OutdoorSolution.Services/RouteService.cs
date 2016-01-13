@@ -122,22 +122,29 @@ namespace OutdoorSolution.Services
 
         private void UpdateRoute(Route route, RouteDto routeDto)
         {
-            route.Name = routeDto.Name;
-            route.Type = routeDto.Type;
+            if (routeDto.Name != null)
+                route.Name = routeDto.Name;
+            if (routeDto.Type.HasValue)
+                route.Type = routeDto.Type.Value;
 
-            ApplicationUser user = route.User;
-            if (user == null)
-                user = userManager.Users.Single(u => u.Id == UserId); // TODO: think about async operation
+            if (routeDto.Grade != null)
+            {
+                ApplicationUser user = route.User;
+                if (user == null)
+                    user = userManager.Users.Single(u => u.Id == UserId); // TODO: think about async operation
 
-            if (route.Type == RouteType.Boulder)
-            {
-                route.Complexity = routeGradeService.GradeToComplexity(routeDto.Grade, user.BoulderingGradesSystem);
+                if (route.Type == RouteType.Boulder)
+                {
+                    route.Complexity = routeGradeService.GradeToComplexity(routeDto.Grade, user.BoulderingGradesSystem);
+                }
+                else
+                {
+                    route.Complexity = routeGradeService.GradeToComplexity(routeDto.Grade, user.FreeClimbingGradesSystem);
+                }
             }
-            else
-            {
-                route.Complexity = routeGradeService.GradeToComplexity(routeDto.Grade, user.FreeClimbingGradesSystem);
-            }
-            route.Path = Utils.CreateDbGeometry(routeDto.Path);
+
+            if (routeDto.Path != null)
+                route.Path = Utils.CreateDbGeometry(routeDto.Path);
         }
     }
 }

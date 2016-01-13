@@ -55,7 +55,7 @@ namespace OutdoorSolution.Controllers
             return Created(route.Self.Href, route);
         }
 
-        public async Task<IHttpActionResult> Put(Guid id, [FromBody]RouteDto routeDto)
+        public async Task<IHttpActionResult> Patch(Guid id, [FromBody]RouteDto routeDto)
         {
             await routeService.Update(id, routeDto);
             await UnitOfWork.SaveChangesAsync();

@@ -30,7 +30,7 @@ namespace OutdoorSolution.Links
             route.Wall = urlHelper.Link<WallsController>(c => c.GetById(route.WallId));
 
             if (route.Permissions.CanModify)
-                route.Update = urlHelper.Link<RoutesController>(c => c.Put(route.Id, null));
+                route.Update = urlHelper.Link<RoutesController>(c => c.Patch(route.Id, null));
             if (route.Permissions.CanDelete)
                 route.Delete = urlHelper.Link<RoutesController>(c => c.Delete(route.Id));
         }

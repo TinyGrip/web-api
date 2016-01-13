@@ -37,7 +37,7 @@ namespace OutdoorSolution.Links
             userInfo.AvatarHref = null;
             userInfo.CoverHref = null;
 
-            userInfo.Update = urlHelper.Link<UserInfoController>(c => c.Put(userInfo.Id, null));
+            userInfo.Update = urlHelper.Link<UserInfoController>(c => c.Patch(userInfo.Id, null));
 
             userInfo.UploadAvatarImage = urlHelper.Link<UserInfoController>(c => c.PatchImage(userInfo.Id, UserImageTypes.Avatar));
             userInfo.UploadCoverImage = urlHelper.Link<UserInfoController>(c => c.PatchImage(userInfo.Id, UserImageTypes.Cover));

@@ -1,13 +1,11 @@
 ﻿using OutdoorSolution.Dal;
 using OutdoorSolution.Domain.Models;
 using OutdoorSolution.Dto;
-using OutdoorSolution.Dto.Infrastructure;
 using OutdoorSolution.Services.Common;
 using OutdoorSolution.Services.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Data.Entity;
 using OutdoorSolution.Domain.Models.Infrastructure;
@@ -171,9 +169,12 @@ namespace OutdoorSolution.Services
 
         private void UpdateArea(Area area, AreaDto areaDto)
         {
-            area.Name = areaDto.Name;
-            area.Location = Utils.CreateDbPoint(areaDto.Location);
-            area.Description = areaDto.Description;
+            if (area.Name != null)
+                area.Name = areaDto.Name;
+            if (areaDto.Location != null)
+                area.Location = Utils.CreateDbPoint(areaDto.Location);
+            if (area.Description != null)
+                area.Description = areaDto.Description;
         }
     }
 }

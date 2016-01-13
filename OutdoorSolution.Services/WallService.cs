@@ -118,9 +118,12 @@ namespace OutdoorSolution.Services
 
         private void UpdateWall(Wall wall, WallDto wallDto)
         {
-            wall.Name = wallDto.Name;
-            wall.Image = wallDto.ImageHref;
-            wall.Location = Utils.CreateDbPoint(wallDto.Location);
+            if (wallDto.Name != null)
+                wall.Name = wallDto.Name;
+            if (wallDto.ImageHref != null)
+                wall.Image = wallDto.ImageHref;
+            if (wallDto.Location != null)
+                wall.Location = Utils.CreateDbPoint(wallDto.Location);
         }
     }
 }

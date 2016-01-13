@@ -40,7 +40,7 @@ namespace OutdoorSolution.Controllers
             return Ok(userInfo);
         }
 
-        public async Task<IHttpActionResult> Put(Guid id, [FromBody]UserInfoDto user)
+        public async Task<IHttpActionResult> Patch(Guid id, [FromBody]UserInfoDto user)
         {
             await userInfoService.Update(id, user);
             await unitOfWork.SaveChangesAsync();
