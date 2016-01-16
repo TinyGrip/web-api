@@ -11,11 +11,12 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.Identity;
+using System.Web.Http.Description;
 
 namespace OutdoorSolution.Controllers
 {
     [Authorize]
-    public class UserInfoController : ApiController
+    public class UserInfoController : UserResourceController
     {
         private readonly IUserInfoService userInfoService;
         private readonly UserInfoLinker userInfoLinker;
@@ -28,7 +29,7 @@ namespace OutdoorSolution.Controllers
             this.unitOfWork = unitOfWork;
         }
 
-        public async Task<IHttpActionResult> GetById(Guid? id = null)
+        public async Task<IHttpActionResult> Get(Guid? id = null)
         {
             if (!id.HasValue)
             {
@@ -80,13 +81,20 @@ namespace OutdoorSolution.Controllers
             return Ok();
         }
 
-        protected override void Dispose(bool disposing)
+        public override void InitUser(string userId)
         {
-            if (disposing)
-            {
-                unitOfWork.Dispose();
-            }
-            base.Dispose(disposing);
+            this.userInfoService.UserId = userId;
+        }
+
+        [ApiExplorerSettings(IgnoreApi=true), NonAction]
+        public override async Task<IHttpActionResult> GetById(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override Dto.Infrastructure.Link GetPagingLink(PagingParams pagingParams)
+        {
+            throw new NotImplementedException();
         }
     }
 }

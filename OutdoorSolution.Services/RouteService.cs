@@ -105,14 +105,26 @@ namespace OutdoorSolution.Services
                 Path = Utils.ConvertDbGeometry(route.Path),
                 WallId = route.WallId
             };
+            
+            // defaults
+            var boulderingGradesSystem = BoulderingGradesSystems.French;
+            var freeClimbingGradesSystem = FreeClimbingGradesSystems.French;
+            
+            // get user specific settings
+            if (UserId != null)
+            {
+                var user = await userManager.FindByIdAsync(UserId);
+                boulderingGradesSystem = user.BoulderingGradesSystem;
+                freeClimbingGradesSystem = user.FreeClimbingGradesSystem;
+            }
 
             if (route.Type == RouteType.Boulder)
             {
-                routeDto.Grade = routeGradeService.ComplexityToGrade(route.Complexity, route.User.BoulderingGradesSystem);
+                routeDto.Grade = routeGradeService.ComplexityToGrade(route.Complexity, boulderingGradesSystem);
             }
             else
             {
-                routeDto.Grade = routeGradeService.ComplexityToGrade(route.Complexity, route.User.FreeClimbingGradesSystem);
+                routeDto.Grade = routeGradeService.ComplexityToGrade(route.Complexity, freeClimbingGradesSystem);
             }
 
             await SetPermissions(routeDto, route);
@@ -129,9 +141,7 @@ namespace OutdoorSolution.Services
 
             if (routeDto.Grade != null)
             {
-                ApplicationUser user = route.User;
-                if (user == null)
-                    user = userManager.Users.Single(u => u.Id == UserId); // TODO: think about async operation
+                ApplicationUser user = userManager.Users.Single(u => u.Id == UserId); // TODO: think about async operation
 
                 if (route.Type == RouteType.Boulder)
                 {

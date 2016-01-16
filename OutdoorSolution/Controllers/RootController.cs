@@ -18,7 +18,7 @@ namespace OutdoorSolution.Controllers
             nodes.Add( "AddArea", Url.Link<AreasController>(c => c.PostArea(null))) ;
 
             var authNodes = new Dictionary<string, object>();
-            authNodes.Add( "User", Url.Link<UserInfoController>(c => c.GetById(null)) );
+            authNodes.Add( "User", Url.Link<UserInfoController>(c => c.Get(null)) );
             
             authNodes.Add( "Token", Url.GetSpecialResource(Startup.OAuthOptions.TokenEndpointPath.Value, "POST") );
             authNodes.Add( "Register", Url.Link<AccountController>(c => c.Register(null)) );

@@ -1,6 +1,7 @@
 ﻿using OutdoorSolution.Dal;
 using OutdoorSolution.Domain.Models;
 using OutdoorSolution.Dto;
+using OutdoorSolution.Services.Exceptions;
 using OutdoorSolution.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -34,6 +35,9 @@ namespace OutdoorSolution.Services
 
         public async Task Update(Guid id, UserInfoDto userInfoDto)
         {
+            if (UserId != id.ToString())
+                throw new AccessDeniedException();
+
             var user = await userManager.FindByIdAsync(id.ToString());
             if (userInfoDto.CoverHref != null && user.CoverImage != userInfoDto.CoverHref)
             {
@@ -56,6 +60,9 @@ namespace OutdoorSolution.Services
 
         public async Task UpdateAvatarImage(Guid userId, Stream imageStream, string fileExtension)
         {
+            if (UserId != userId.ToString())
+                throw new AccessDeniedException();
+
             var user = await userManager.FindByIdAsync(userId.ToString());
 
             // delete old wall image file if needed
@@ -68,6 +75,9 @@ namespace OutdoorSolution.Services
 
         public async Task UpdateCoverImage(Guid userId, Stream imageStream, string fileExtension)
         {
+            if (UserId != userId.ToString())
+                throw new AccessDeniedException();
+
             var user = await userManager.FindByIdAsync(userId.ToString());
 
             // delete old wall image file if needed

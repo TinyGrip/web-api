@@ -45,7 +45,7 @@ namespace OutdoorSolution.Links
             userInfo.ChangePassword = urlHelper.Link<AccountController>(c => c.ChangePassword(null));
             userInfo.Logout = urlHelper.Link<AccountController>(c => c.Logout());
 
-            userInfo.Self = urlHelper.Link<UserInfoController>(c => c.GetById(userInfo.Id));
+            userInfo.Self = urlHelper.Link<UserInfoController>(c => c.Get(userInfo.Id));
         }
     }
 }
