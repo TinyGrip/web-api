@@ -128,7 +128,10 @@ namespace OutdoorSolution.Services
             }
 
             await SetPermissions(routeDto, route);
-
+            // allow to comment to any existing user
+            var currUser = await userManager.FindByIdAsync(UserId);
+            routeDto.CanComment = currUser != null;
+            
             return routeDto;
         }
 

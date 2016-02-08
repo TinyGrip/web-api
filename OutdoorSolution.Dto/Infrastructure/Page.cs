@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OutdoorSolution.Dto.Infrastructure
 {
-    public class Page<T> where T : PageItem
+    public class Page<T> where T : class
     {
         public int TotalAmount { get; set; }
 

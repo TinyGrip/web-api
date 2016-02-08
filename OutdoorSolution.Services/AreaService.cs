@@ -140,6 +140,10 @@ namespace OutdoorSolution.Services
             };
 
             await SetPermissions(areaDto, area);
+            // allow to comment to any existing user
+            var currUser = await userManager.FindByIdAsync(UserId);
+            areaDto.CanComment = currUser != null;
+
             areaDto.Location = Utils.CreateGeoDto(area.Location);
 
             // add previews

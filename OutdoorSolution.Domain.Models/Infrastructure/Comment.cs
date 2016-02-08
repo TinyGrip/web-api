@@ -8,19 +8,23 @@ using System.Threading.Tasks;
 
 namespace OutdoorSolution.Domain.Models.Infrastructure
 {
-    public abstract class BaseComment
+    public abstract class Comment
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [DataType(DataType.Text)]
+        [Required]
+        [MaxLength(2048)]
         public string Text { get; set; }
 
         public DateTime Created { get; set; }
 
+        [Required]
         [ForeignKey("User")]
         public string UserId { get; set; }
 
         public virtual ApplicationUser User { get; set; }
+
+        public abstract Guid SubjectId { get; set; }
     }
 }

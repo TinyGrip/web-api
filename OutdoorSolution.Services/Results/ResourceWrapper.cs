@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace OutdoorSolution.Services.Results
 {
-    public class ResourceWrapper<T> where T: PageItem
+    public class ResourceWrapper<T> where T: class
     {
         private Func<Task<T>> dtoCreator;
 

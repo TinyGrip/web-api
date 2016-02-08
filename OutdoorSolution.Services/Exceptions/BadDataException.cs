@@ -6,10 +6,7 @@ using System.Threading.Tasks;
 
 namespace OutdoorSolution.Services.Exceptions
 {
-    public class AccessDeniedException : Exception
+    public class BadDataException : Exception
     {
-        public AccessDeniedException() { }
-
-        public AccessDeniedException(String message) : base(message) { }
     }
 }

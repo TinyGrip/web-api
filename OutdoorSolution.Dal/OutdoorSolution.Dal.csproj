@@ -105,6 +105,10 @@
     <Compile Include="Migrations\201601111446399_GradesSystems.Designer.cs">
       <DependentUpon>201601111446399_GradesSystems.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201601182203159_CommentLength.cs" />
+    <Compile Include="Migrations\201601182203159_CommentLength.Designer.cs">
+      <DependentUpon>201601182203159_CommentLength.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoleNames.cs" />
@@ -150,6 +154,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201601111446399_GradesSystems.resx">
       <DependentUpon>201601111446399_GradesSystems.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201601182203159_CommentLength.resx">
+      <DependentUpon>201601182203159_CommentLength.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

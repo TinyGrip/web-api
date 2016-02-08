@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="AreaDto.cs" />
     <Compile Include="AreaImageDto.cs" />
+    <Compile Include="CommentDto.cs" />
     <Compile Include="GeographyDto.cs" />
     <Compile Include="Infrastructure\Enums.cs" />
     <Compile Include="Infrastructure\Link.cs" />

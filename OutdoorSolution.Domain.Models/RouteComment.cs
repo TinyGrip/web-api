@@ -1,16 +1,16 @@
 ﻿using OutdoorSolution.Domain.Models.Infrastructure;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OutdoorSolution.Domain.Models
 {
-    public class RouteComment : BaseComment
+    public class RouteComment : Comment
     {
-        public Guid RouteId { get; set; }
+        [Required]
+        [ForeignKey("Route")]
+        public override Guid SubjectId { get; set; }
 
-        public Route Route { get; set; }
+        public virtual Route Route { get; set; }
     }
 }

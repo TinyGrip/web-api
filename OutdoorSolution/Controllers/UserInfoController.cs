@@ -87,7 +87,7 @@ namespace OutdoorSolution.Controllers
         }
 
         [ApiExplorerSettings(IgnoreApi=true), NonAction]
-        public override async Task<IHttpActionResult> GetById(Guid id)
+        public override Task<IHttpActionResult> GetById(Guid id)
         {
             throw new NotImplementedException();
         }

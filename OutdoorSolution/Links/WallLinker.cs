@@ -16,13 +16,6 @@ namespace OutdoorSolution.Links
     /// </summary>
     public class WallLinker : ILinker
     {
-        readonly IWallService wallService;
-
-        public WallLinker(IWallService wallService)
-        {
-            this.wallService = wallService;
-        }
-
         public void Linkify(WallDto wall, UrlHelper urlHelper)
         {
             wall.Self = urlHelper.Link<WallsController>(c => c.GetById(wall.Id));

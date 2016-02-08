@@ -32,6 +32,7 @@ namespace OutdoorSolution.Links
         {
             area.Self = urlHelper.Link<AreasController>(c => c.GetById(area.Id));
             area.Walls = urlHelper.Link<WallsController>(c => c.Get(area.Id, null));
+            area.Comments = urlHelper.Link<CommentsController>(c => c.GetByArea(area.Id, null));
 
             if (area.Permissions.CanCreateChild)
             {
@@ -42,6 +43,8 @@ namespace OutdoorSolution.Links
                 area.Update = urlHelper.Link<AreasController>(a => a.Patch(area.Id, null));
             if (area.Permissions.CanDelete)
                 area.Update = urlHelper.Link<AreasController>(a => a.Delete(area.Id));
+            if (area.CanComment)
+                area.AddComment = urlHelper.Link<CommentsController>(a => a.PostByArea(area.Id, null));
 
             aiLinker.Linkify(area.Images, urlHelper);
             wallLinker.Linkify(area.PreviewWalls, urlHelper);

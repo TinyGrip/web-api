@@ -69,9 +69,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommentService.cs" />
     <Compile Include="Common\IPagingData.cs" />
     <Compile Include="Common\PagingData.cs" />
+    <Compile Include="Exceptions\BadDataException.cs" />
     <Compile Include="Exceptions\WrongGradeSystem.cs" />
+    <Compile Include="Interfaces\ICommentService.cs" />
     <Compile Include="Interfaces\IRouteGradeService.cs" />
     <Compile Include="Interfaces\IUserInfoService.cs" />
     <Compile Include="Interfaces\IUserResourceService.cs" />

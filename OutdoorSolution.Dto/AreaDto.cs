@@ -1,10 +1,8 @@
-﻿using OutdoorSolution.Dto.Infrastructure;
+﻿using Newtonsoft.Json;
+using OutdoorSolution.Dto.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OutdoorSolution.Dto
 {
@@ -35,12 +33,19 @@ namespace OutdoorSolution.Dto
 
         public IEnumerable<RouteDto> PreviewRoutes { get; set; }
 
+        [JsonIgnore]
+        public bool CanComment { get; set; }
+
         // --------------- Links section -----------------
 
         public Link Walls { get; set; }
 
+        public Link Comments { get; set; }
+
         public Link AddWall { get; set; }
 
         public Link AddImage { get; set; }
+
+        public Link AddComment { get; set; }
     }
 }

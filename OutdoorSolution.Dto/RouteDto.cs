@@ -22,5 +22,12 @@ namespace OutdoorSolution.Dto
         public Guid WallId { get; set; }
 
         public Link Wall { get; set; }
+
+        public Link Comments { get; set; }
+
+        public Link AddComment { get; set; }
+
+        [JsonIgnore]
+        public bool CanComment { get; set; }
     }
 }

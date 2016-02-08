@@ -24,7 +24,7 @@ namespace OutdoorSolution.Controllers
         protected abstract Link GetPagingLink(PagingParams pagingParams);
 
         protected Page<T> CreatePage<T>(IEnumerable<T> items, PagingParams param)
-            where T : PageItem
+            where T : class
         {
             var page = new Page<T>();
             page.Items = items;

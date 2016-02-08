@@ -1,15 +1,15 @@
 ﻿using OutdoorSolution.Domain.Models.Infrastructure;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OutdoorSolution.Domain.Models
 {
-    public class AreaComment : BaseComment
+    public class AreaComment : Comment
     {
-        public Guid AreaId { get; set; }
+        [Required]
+        [ForeignKey("Area")]
+        public override Guid SubjectId { get; set; }
 
         public virtual Area Area { get; set; }
     }

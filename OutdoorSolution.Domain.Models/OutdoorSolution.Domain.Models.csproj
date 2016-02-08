@@ -70,7 +70,7 @@
     <Compile Include="ApplicationUser.cs" />
     <Compile Include="AreaComment.cs" />
     <Compile Include="AreaImage.cs" />
-    <Compile Include="Infrastructure\BaseComment.cs" />
+    <Compile Include="Infrastructure\Comment.cs" />
     <Compile Include="Area.cs" />
     <Compile Include="Infrastructure\IUserResource.cs" />
     <Compile Include="Infrastructure\PreviewArea.cs" />

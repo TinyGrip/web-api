@@ -193,6 +193,7 @@
     <Compile Include="Controllers\Area\AreaImagesController.cs" />
     <Compile Include="Controllers\Area\AreasController.cs" />
     <Compile Include="Controllers\Area\PreviewAreasController.cs" />
+    <Compile Include="Controllers\CommentsController.cs" />
     <Compile Include="Controllers\UserInfoController.cs" />
     <Compile Include="Controllers\UserResourceController.cs" />
     <Compile Include="Controllers\PagingController.cs" />
@@ -217,6 +218,7 @@
     <Compile Include="Links\AreaImageLinker.cs" />
     <Compile Include="Links\AreaLinker.cs" />
     <Compile Include="Links\ILinker.cs" />
+    <Compile Include="Links\CommentLinker.cs" />
     <Compile Include="Links\RouteLinker.cs" />
     <Compile Include="Links\UserInfoLinker.cs" />
     <Compile Include="Links\WallLinker.cs" />

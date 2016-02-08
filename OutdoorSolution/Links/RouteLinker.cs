@@ -17,22 +17,18 @@ namespace OutdoorSolution.Links
     /// </summary>
     public class RouteLinker : ILinker
     {
-        readonly IRouteService routeService;
-
-        public RouteLinker(IRouteService routeService)
-        {
-            this.routeService = routeService;
-        }
-
         public void Linkify(RouteDto route, UrlHelper urlHelper)
         {
             route.Self = urlHelper.Link<RoutesController>(c => c.GetById(route.Id));
             route.Wall = urlHelper.Link<WallsController>(c => c.GetById(route.WallId));
+            route.Comments = urlHelper.Link<CommentsController>(c => c.GetByRoute(route.Id, null));
 
             if (route.Permissions.CanModify)
                 route.Update = urlHelper.Link<RoutesController>(c => c.Patch(route.Id, null));
             if (route.Permissions.CanDelete)
                 route.Delete = urlHelper.Link<RoutesController>(c => c.Delete(route.Id));
+            if (route.CanComment)
+                route.AddComment = urlHelper.Link<CommentsController>(a => a.PostByArea(route.Id, null));
         }
 
         public void Linkify(IEnumerable<RouteDto> routes, UrlHelper urlHelper)
